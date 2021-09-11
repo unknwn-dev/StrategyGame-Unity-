@@ -8,6 +8,7 @@ public class Player
 {
     public string PlayerName;
     public int PlayerID;
+    public Color PlayerColor;
     [HideInInspector]
     public Tile PlayerTile = new Tile();
 
@@ -17,5 +18,6 @@ public class Player
         PlayerID = id;
         PlayerTile.sprite = Settings.Instance.BaseTileSprite;
         PlayerTile.color = color;
+        PlayerColor = color;
     }
 }

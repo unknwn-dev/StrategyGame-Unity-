@@ -96,12 +96,13 @@ public class Cell
     public void UpdateUnitsCount()
     {
         if (Units != null && Units.Number > 0)
-        { 
-            UnitsCount.GetComponent<Text>().text = $"{Units.Owner.PlayerName}\n{Units.Number}";
+        {
+            UnitsCount.SetActive(true);
+            UnitsCount.GetComponentInChildren<Text>().text = $"{Units.Owner.PlayerName}\n{Units.Number}";
         }
         else
         {
-            UnitsCount.GetComponent<Text>().text = "";
+            UnitsCount.SetActive(false);
         }
     }
 }

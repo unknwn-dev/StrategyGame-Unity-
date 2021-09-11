@@ -11,6 +11,11 @@ public class Settings : ScriptableObject
     public Sprite BaseTileSprite;
     public Tile GroundTile;
     public GameObject UnitsCountPrefab;
+    public float CameraSpeed;
+    public float MaxZoom;
+    public float MinZoom;
+    public Vector2 MaxCamPos;
+    public Vector2 MinCamPos;
 
     private void OnEnable()
     {
