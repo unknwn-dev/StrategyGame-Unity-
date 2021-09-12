@@ -12,11 +12,12 @@ public class MainScript : MonoBehaviour
     public Canvas MainCanvas;
     public GameObject GameGui;
     public GameObject SelectUnitsNum;
+    public bool IsCamMove;
 
     public List<Player> Players;
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
 
-    private int PlayerStep;
+    private int PlayerStep = 0;
     private int Steps;
     private Cell SelectedCell;
     private float NumSendUnits;
@@ -73,38 +74,35 @@ public class MainScript : MonoBehaviour
             Vector3Int ClickedCell = Tilemap.WorldToCell(mousePos);
             ClickedCell.z = 0;
 
-            if (World.ContainsKey(ClickedCell))
+            if (SelectedCell == null && World[ClickedCell].Units != null && World[ClickedCell].Units.Number > 0 && World[ClickedCell].Units.Owner == Players[PlayerStep])
             {
-                if (SelectedCell == null && World[ClickedCell].Units != null && World[ClickedCell].Units.Number > 0 && World[ClickedCell].Units.Owner == Players[PlayerStep])
+                Debug.Log("cellSelected");
+                SelectedCell = World[ClickedCell];
+                SelectUnitsNum.SetActive(true);
+                Slider slide = SelectUnitsNum.GetComponentInChildren<Slider>();
+                slide.value = World[ClickedCell].Units.Number / 2;
+                slide.maxValue = World[ClickedCell].Units.Number;
+                OnSliderValueSet();
+            }
+            else if (SelectedCell != null)
+            {
+                foreach (var neighbor in SelectedCell.Neighbors())
                 {
-                    Debug.Log("cellSelected");
-                    SelectedCell = World[ClickedCell];
-                    SelectUnitsNum.SetActive(true);
-                    Slider slide = SelectUnitsNum.GetComponentInChildren<Slider>();
-                    slide.value = World[ClickedCell].Units.Number/2;
-                    slide.maxValue = World[ClickedCell].Units.Number;
-                    OnSliderValueSet();
-                }
-                else if (SelectedCell != null)
-                {
-                    foreach (var neighbor in SelectedCell.Neighbors())
+                    if (World[ClickedCell].IsGround && neighbor == ClickedCell)
                     {
-                        if (World[ClickedCell].IsGround && neighbor == ClickedCell)
+                        Debug.Log("SecondCellSelected");
+                        World[ClickedCell].AddUnits(SelectedCell.GetUnits((int)NumSendUnits));
+                        SelectedCell = null;
+
+                        SelectUnitsNum.GetComponentInChildren<Slider>().value = 1;
+                        SelectUnitsNum.SetActive(false);
+
+                        Steps++;
+                        PlayerStep++;
+
+                        if (PlayerStep > Players.Count-1)
                         {
-                            Debug.Log("SecondCellSelected");
-                            World[ClickedCell].AddUnits(SelectedCell.GetUnits((int)NumSendUnits));
-                            SelectedCell = null;
-
-                            SelectUnitsNum.GetComponentInChildren<Slider>().value = 1;
-                            SelectUnitsNum.SetActive(false);
-
-                            Steps++;
-                            PlayerStep++;
-
-                            if (PlayerStep > Players.Count - 1)
-                            {
-                                PlayerStep = 0;
-                            }
+                            PlayerStep = 0;
                         }
                     }
                 }
