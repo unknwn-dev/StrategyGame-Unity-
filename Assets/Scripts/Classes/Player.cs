@@ -12,7 +12,6 @@ public class Player
     [HideInInspector]
     public Tile PlayerTile = new Tile();
     public int Money;
-    public float Taxes = 0.01f;
 
     public Player(string name, int id, Color color)
     {
@@ -27,7 +26,6 @@ public class Player
     {
         foreach(var cell in PlayerCells)
         {
-            cell.Rec.Taxes = Taxes;
             Money += (int)cell.Rec.Income;
             cell.Rec.MakeStep();
         }

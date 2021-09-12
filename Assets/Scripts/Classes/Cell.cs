@@ -6,11 +6,12 @@ using UnityEngine.Events;
 
 public class Cell
 {
-    public Units Units;
+    public Unit Units;
     public Vector3Int CellPos;
     public bool IsGround;
     private GameObject UnitsCount;
     public Recources Rec;
+    public Player Owner;
 
 
     private static Vector3Int
@@ -44,9 +45,10 @@ public class Cell
     public void UpdateOwn()
     {
         MainScript.Instance.GroundTilemap.SetTile(CellPos, Units.Owner.PlayerTile);
+        Owner = Units.Owner;
     }
 
-    public Cell(Units units, Vector3Int pos, bool isGround, GameObject text, Recources recources)
+    public Cell(Unit units, Vector3Int pos, bool isGround, GameObject text, Recources recources)
     {
         Units = units;
         CellPos = pos;
@@ -55,52 +57,40 @@ public class Cell
         Rec = recources;
     }
 
-    public void AddUnits(Units OtherUnits)
+    public void AddUnits(Unit OtherUnits)
     {
         if (Units == null)
         {
             Units = OtherUnits;
             UpdateOwn();
         }
-        else if(OtherUnits.Owner != Units.Owner)
+        else if (OtherUnits.Owner != Units.Owner && (int)Units.Type < (int)OtherUnits.Type)
         {
-            int TempUnits = Units.Number - OtherUnits.Number;
-
-            if(TempUnits < 0)
-            {
-                OtherUnits.Number -= Units.Number;
-                Units = OtherUnits;
-                UpdateOwn();
-            }
-            else
-            {
-                Units.Number = TempUnits;
-            }
+            Units = OtherUnits;
+            UpdateOwn();
         }
-        else if (Units.Owner == OtherUnits.Owner)
+        else if (OtherUnits.Owner != Units.Owner && (int)Units.Type == (int)OtherUnits.Type)
         {
-            Units.Number += OtherUnits.Number;
+            Units = OtherUnits;
+            UpdateOwn();
         }
         UpdateUnitsCount();
     }
 
-    public Units GetUnits(int Num)
+    public Unit GetUnits()
     {
-        if(Num <= Units.Number)
-        {
-            Units.Number -= Num;
-            UpdateUnitsCount();
-            return new Units(Units.Owner, Num);
-        }
-        return null;
+        Unit outUnits = new Unit(Units.Owner, Units.Type);
+        Units = null;
+        UpdateUnitsCount();
+        return outUnits;
     }
 
     public void UpdateUnitsCount()
     {
-        if (Units != null && Units.Number > 0)
+        if (Units != null)
         {
             UnitsCount.SetActive(true);
-            UnitsCount.GetComponentInChildren<Text>().text = $"{Units.Owner.PlayerName}\n{Units.Number}";
+            UnitsCount.GetComponentInChildren<Text>().text = $"{Units.Owner.PlayerName}\n{Units.Type}";
         }
         else
         {

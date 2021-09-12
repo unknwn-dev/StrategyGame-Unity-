@@ -13,16 +13,14 @@ public class MainScript : MonoBehaviour
 
     public Canvas MainCanvas;
     public GameObject GameGui;
-    public GameObject SelectUnitsNum;
     public bool IsCamMove;
 
     public List<Player> Players;
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
+    public int PlayerStep = 0;
 
-    private int PlayerStep = 0;
     private int Steps;
     private Cell SelectedCell;
-    private float NumSendUnits;
     private BoundsInt bounds;
 
     void Start()
@@ -41,7 +39,7 @@ public class MainScript : MonoBehaviour
                 Vector3Int pos = new Vector3Int(x, y, 0);
                 Vector3 TextPos = GroundTilemap.CellToWorld(pos);
                 GameObject Text = Instantiate(Settings.Instance.UnitsCountPrefab, TextPos, new Quaternion(), MainCanvas.transform);
-                Recources rec = new Recources(Recources.GetRandomCellType(), 10, 0.01f);
+                Recources rec = new Recources(Recources.GetRandomCellType());
 
                 Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), Text, rec);
 
@@ -65,14 +63,14 @@ public class MainScript : MonoBehaviour
             Vector3Int randPos = new Vector3Int(Random.Range(bounds.xMin, bounds.xMax), Random.Range(bounds.yMin, bounds.yMax), 0);
             while (!World[randPos].IsGround)
                 randPos = new Vector3Int(Random.Range(bounds.xMin, bounds.xMax), Random.Range(bounds.yMin, bounds.yMax), 0);
-            World[randPos].AddUnits(new Units(pl, 100));
+            World[randPos].AddUnits(new Unit(pl, Unit.UnitType.Citizen));
         }
 
     }
 
     void Update()
     {
-        MakeStep();
+        MoveUnit();
         UpdateGui();
     }
 
@@ -84,32 +82,23 @@ public class MainScript : MonoBehaviour
         GameObject.Find("Money").GetComponent<Text>().text = Players[PlayerStep].Money.ToString();
     }
 
-    private void MakeStep()
+    private void MoveUnit()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !ShopScript.Instance.IsBuying)
         {
             Vector3Int ClickedCell = GroundTilemap.WorldToCell(mousePos);
             ClickedCell.z = 0;
 
-            if (SelectedCell == null && World[ClickedCell].Units != null && World[ClickedCell].Units.Number > 0 && World[ClickedCell].Units.Owner == Players[PlayerStep])
+            if (SelectedCell == null && World[ClickedCell].Units != null && World[ClickedCell].Units.Owner == Players[PlayerStep] && !World[ClickedCell].Units.IsMakeStep)
             {
                 SelectedCell = World[ClickedCell];
-
-                SelectUnitsNum.SetActive(true);
-                Slider slide = SelectUnitsNum.GetComponentInChildren<Slider>();
-                slide.value = World[ClickedCell].Units.Number / 2;
-                slide.maxValue = World[ClickedCell].Units.Number;
-                OnSliderValueSet();
             }
 
             else if(SelectedCell != null && World[ClickedCell] == SelectedCell)
             {
                 SelectedCell = null;
-
-                SelectUnitsNum.GetComponentInChildren<Slider>().value = 1;
-                SelectUnitsNum.SetActive(false);
             }
 
             else if (SelectedCell != null)
@@ -118,29 +107,25 @@ public class MainScript : MonoBehaviour
                 {
                     if (World[ClickedCell].IsGround && neighbor == ClickedCell)
                     {
-                        World[ClickedCell].AddUnits(SelectedCell.GetUnits((int)NumSendUnits));
+                        World[ClickedCell].AddUnits(SelectedCell.GetUnits());
                         SelectedCell = null;
-
-                        SelectUnitsNum.GetComponentInChildren<Slider>().value = 1;
-                        SelectUnitsNum.SetActive(false);
-
-                        Steps++;
-                        PlayerStep++;
-
-                        if (PlayerStep > Players.Count-1)
-                        {
-                            PlayerStep = 0;
-                        }
-
-                        NextStep();
+                        World[ClickedCell].Units.IsMakeStep = true;
                     }
                 }
             }
         }
     }
 
-    private void NextStep()
+    public void NextStep()
     {
+        Steps++;
+        PlayerStep++;
+
+        if (PlayerStep > Players.Count - 1)
+        {
+            PlayerStep = 0;
+        }
+
         Dictionary<Vector3Int, Cell> TempWorld = new Dictionary<Vector3Int, Cell>(World);
         foreach(var pl in Players)
         {
@@ -153,26 +138,19 @@ public class MainScript : MonoBehaviour
                     if (TempWorld.ContainsKey(pos))
                     {
                         Cell cell = TempWorld[pos];
-                        if (cell.Units != null && cell.Units.Owner == pl)
+                        if (cell.Owner == pl)
                         {
                             PlayerCells.Add(cell);
                             TempWorld.Remove(pos);
+                            if (cell.Units != null)
+                            {
+                                cell.Units.IsMakeStep = false;
+                            }
                         }
                     }
                 }
             }
             pl.MakeStep(PlayerCells);
-        }
-    }
-
-    public void OnSliderValueSet()
-    {
-        Cell SelCell = null;
-        if (SelectedCell != null)
-        {
-            SelCell = SelectedCell;
-            NumSendUnits = SelectUnitsNum.GetComponentInChildren<Slider>().value;
-            SelectUnitsNum.GetComponentInChildren<Text>().text = $"Units:{NumSendUnits}, Pop:{SelCell.Rec.Population}, Hap:{SelCell.Rec.Happiness}";
         }
     }
 }

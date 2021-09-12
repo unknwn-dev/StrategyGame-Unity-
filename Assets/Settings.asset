@@ -24,3 +24,5 @@ MonoBehaviour:
   MinZoom: 1.5
   MaxCamPos: {x: 15, y: 6.77}
   MinCamPos: {x: -15, y: -6.52}
+  CitizenCost: 10
+  WarriorCost: 50

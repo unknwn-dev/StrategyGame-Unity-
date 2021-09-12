@@ -29,6 +29,10 @@ public class Settings : ScriptableObject
     public Vector2 MaxCamPos;
     public Vector2 MinCamPos;
 
+    [Header("ShopSettings")]
+    public int CitizenCost;
+    public int WarriorCost;
+
     private void OnEnable()
     {
         Instance = this;

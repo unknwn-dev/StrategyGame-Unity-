@@ -12,46 +12,29 @@ public class Recources
     }
 
     public CellType Type;
-    public int Population;
-    public float PopGrowth;
     public float Income;
-    public float Happiness;
-    public float Taxes;
 
-    public Recources(CellType type, float happy, float tax)
+    public Recources(CellType type)
     {
-        Taxes = tax;
         Type = type;
 
         if(type == CellType.Flat)
         {
-            Population = Random.Range(3000, 6000);
-            Happiness = happy;
-            PopGrowth = Random.Range(-10 * happy, 10 * happy);
-            Income = (Population / 100) * Taxes;
+            Income = 1;
         }
         else if (type == CellType.River)
         {
-            Population = Random.Range(2500, 5500);
-            Happiness = happy + 2;
-            PopGrowth = Random.Range(-10 * happy, 10 * happy);
-            Income = (Population / 100) * Taxes + 100;
+            Income = 2;
         }
         else if (type == CellType.Forest)
         {
-            Population = Random.Range(1000, 3000);
-            Happiness = happy + 5;
-            PopGrowth = Random.Range(-8 * happy, 8 * happy);
-            Income = (Population / 100) * Taxes + 200;
+            Income = 2;
         }
     }
 
     public void MakeStep()
     {
-        Population += Mathf.RoundToInt(PopGrowth);
-        PopGrowth += Random.Range(-8 * Happiness, 8 * Happiness) / 10;
-        Happiness += (-PopGrowth / 1000) / Taxes;
-        Income = Taxes * Population;
+        //TODO: Make More Parameters For future
     }
 
     public static CellType GetRandomCellType()
