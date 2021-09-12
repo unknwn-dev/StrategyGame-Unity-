@@ -22,6 +22,7 @@ public class Recources
     {
         Taxes = tax;
         Type = type;
+
         if(type == CellType.Flat)
         {
             Population = Random.Range(3000, 6000);
