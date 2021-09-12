@@ -10,6 +10,7 @@ public class Cell
     public Vector3Int CellPos;
     public bool IsGround;
     private GameObject UnitsCount;
+    public Recources Rec;
 
 
     private static Vector3Int
@@ -42,15 +43,16 @@ public class Cell
 
     public void UpdateOwn()
     {
-        MainScript.Instance.Tilemap.SetTile(CellPos, Units.Owner.PlayerTile);
+        MainScript.Instance.GroundTilemap.SetTile(CellPos, Units.Owner.PlayerTile);
     }
 
-    public Cell(Units units, Vector3Int pos, bool isGround, GameObject text)
+    public Cell(Units units, Vector3Int pos, bool isGround, GameObject text, Recources recources)
     {
         Units = units;
         CellPos = pos;
         IsGround = isGround;
         UnitsCount = text;
+        Rec = recources;
     }
 
     public void AddUnits(Units OtherUnits)
