@@ -41,8 +41,8 @@ public class Recources
     {
         float random = Random.Range(0.01f,1);
 
-        if (random <= Settings.Instance.ForestChance) return CellType.Forest;
-        else if (random > Settings.Instance.ForestChance && random <= Settings.Instance.MounatinChance) return CellType.Mountain;
+        if (random <= MainScript.Instance.Settings.ForestChance) return CellType.Forest;
+        else if (random > MainScript.Instance.Settings.ForestChance && random <= MainScript.Instance.Settings.MounatinChance) return CellType.Mountain;
         else return CellType.Flat;
     }
 }

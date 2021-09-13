@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MainScript : MonoBehaviour
 {
     public static MainScript Instance;
-
+    public Settings Settings;
     public Tilemap GroundTilemap;
     public Tilemap CellModsTilemap;
 
@@ -38,7 +38,7 @@ public class MainScript : MonoBehaviour
             {
                 Vector3Int pos = new Vector3Int(x, y, 0);
                 Vector3 TextPos = GroundTilemap.CellToWorld(pos);
-                GameObject Text = Instantiate(Settings.Instance.UnitsCountPrefab, TextPos, new Quaternion(), MainCanvas.transform);
+                GameObject Text = Instantiate(MainScript.Instance.Settings.UnitsCountPrefab, TextPos, new Quaternion(), MainCanvas.transform);
                 Recources rec = new Recources(Recources.GetRandomCellType());
 
                 Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), Text, rec);
@@ -47,23 +47,28 @@ public class MainScript : MonoBehaviour
 
                 if(rec.Type == Recources.CellType.Forest && creatingCell.IsGround)
                 {
-                    CellModsTilemap.SetTile(pos, Settings.Instance.ForestTile);
+                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.ForestTile);
                 }
                 else if (rec.Type == Recources.CellType.Mountain && creatingCell.IsGround)
                 {
-                    CellModsTilemap.SetTile(pos, Settings.Instance.MountainTile);
+                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.MountainTile);
                 }
 
                 creatingCell.UpdateUnitsCount();
             }
         }
 
+        List<Vector3Int> poses = new List<Vector3Int>();
+        foreach(var wp in World)
+        {
+            if (wp.Value.IsGround) poses.Add(wp.Key);
+        }
+
         foreach(var pl in Players)
         {
-            Vector3Int randPos = new Vector3Int(Random.Range(bounds.xMin, bounds.xMax), Random.Range(bounds.yMin, bounds.yMax), 0);
-            while (!World[randPos].IsGround)
-                randPos = new Vector3Int(Random.Range(bounds.xMin, bounds.xMax), Random.Range(bounds.yMin, bounds.yMax), 0);
-            World[randPos].AddUnits(new Unit(pl, Unit.UnitType.Citizen));
+            int p = Random.Range(0, poses.Count);
+            World[poses[p]].AddUnits(new Unit(pl, Unit.UnitType.Citizen));
+            poses.RemoveAt(p);
         }
 
     }

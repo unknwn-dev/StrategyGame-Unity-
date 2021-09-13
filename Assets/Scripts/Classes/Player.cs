@@ -17,7 +17,7 @@ public class Player
     {
         PlayerName = name;
         PlayerID = id;
-        PlayerTile.sprite = Settings.Instance.BaseTileSprite;
+        PlayerTile.sprite = MainScript.Instance.Settings.BaseTileSprite;
         PlayerTile.color = color;
         PlayerColor = color;
     }

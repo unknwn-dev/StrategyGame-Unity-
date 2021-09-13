@@ -50,17 +50,17 @@ public class ShopScript : MonoBehaviour
                 if (World[ClickedCell].Units == null && World[ClickedCell].Owner == MovingPlayer)
                 {
 
-                    if (SelectedType == Unit.UnitType.Citizen && MovingPlayer.Money >= Settings.Instance.CitizenCost)
+                    if (SelectedType == Unit.UnitType.Citizen && MovingPlayer.Money >= MainScript.Instance.Settings.CitizenCost)
                     {
-                        MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= Settings.Instance.CitizenCost;
+                        MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= MainScript.Instance.Settings.CitizenCost;
                         World[ClickedCell].AddUnits(new Unit(MovingPlayer, SelectedType));
                         SelectedType = Unit.UnitType.Null;
                         IsBuying = false;
                     }
 
-                    else if(SelectedType == Unit.UnitType.Warrior && MovingPlayer.Money >= Settings.Instance.WarriorCost)
+                    else if(SelectedType == Unit.UnitType.Warrior && MovingPlayer.Money >= MainScript.Instance.Settings.WarriorCost)
                     {
-                        MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= Settings.Instance.WarriorCost;
+                        MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= MainScript.Instance.Settings.WarriorCost;
                         World[ClickedCell].AddUnits(new Unit(MovingPlayer, SelectedType));
                         SelectedType = Unit.UnitType.Null;
                         IsBuying = false;
