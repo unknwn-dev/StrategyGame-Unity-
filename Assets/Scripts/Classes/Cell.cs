@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
+using UnityEngine.Tilemaps;
+using TMPro;
 
 public class Cell
 {
@@ -44,8 +44,27 @@ public class Cell
 
     public void UpdateOwn()
     {
-        MainScript.Instance.GroundTilemap.SetTile(CellPos, Units.Owner.PlayerTile);
-        Owner = Units.Owner;
+        if (Units != null)
+        {
+            Owner = Units.Owner;
+            MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
+
+            if(Units.Type == Unit.UnitType.Citizen)
+                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.CivilTile);
+            if(Units.Type == Unit.UnitType.Warrior)
+                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.WarriorTile);
+        }
+        else if(Owner != null)
+        {
+            MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
+            MainScript.Instance.UnitsTilemap.SetTile(CellPos, null);
+        }
+        else
+        {
+
+            MainScript.Instance.GroundTilemap.SetTile(CellPos, MainScript.Instance.Settings.GroundTile);
+            MainScript.Instance.UnitsTilemap.SetTile(CellPos, null);
+        }
     }
 
     public Cell(Unit units, Vector3Int pos, bool isGround, GameObject text, Recources recources)
@@ -62,39 +81,19 @@ public class Cell
         if (Units == null)
         {
             Units = OtherUnits;
-            UpdateOwn();
         }
         else if (OtherUnits.Owner != Units.Owner && (int)Units.Type < (int)OtherUnits.Type)
         {
             Units = OtherUnits;
-            UpdateOwn();
         }
-        else if (OtherUnits.Owner != Units.Owner && (int)Units.Type == (int)OtherUnits.Type)
-        {
-            Units = OtherUnits;
-            UpdateOwn();
-        }
-        UpdateUnitsCount();
+        UpdateOwn();
     }
 
     public Unit GetUnits()
     {
         Unit outUnits = new Unit(Units.Owner, Units.Type);
         Units = null;
-        UpdateUnitsCount();
+        UpdateOwn();
         return outUnits;
-    }
-
-    public void UpdateUnitsCount()
-    {
-        if (Units != null)
-        {
-            UnitsCount.SetActive(true);
-            UnitsCount.GetComponentInChildren<Text>().text = $"{Units.Owner.PlayerName}\n{Units.Type}";
-        }
-        else
-        {
-            UnitsCount.SetActive(false);
-        }
     }
 }

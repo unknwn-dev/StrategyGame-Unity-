@@ -13,16 +13,19 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   BaseTileSprite: {fileID: 21300000, guid: 9b0d5a8bfb9c4f64ba123d40e6f110f3, type: 3}
-  GroundTile: {fileID: 11400000, guid: 2ce04839ba6bc824b85f963e098f7378, type: 2}
+  GroundTile: {fileID: 11400000, guid: f3411c1fa79bdf54c921d25da899da0d, type: 2}
   ForestTile: {fileID: 11400000, guid: c0e2ea282749bc44ea654b7bda05da3e, type: 2}
+  CivilTile: {fileID: 11400000, guid: 18fd4e1b3284d684aa9e9f35e5f443f4, type: 2}
+  WarriorTile: {fileID: 11400000, guid: 6a75132d8826f6242b2b4df8691cd624, type: 2}
   ForestChance: 0.15
   MountainTile: {fileID: 11400000, guid: a6505d10bbe3aa54e9388ac2298443be, type: 2}
-  MounatinChance: 0.05
-  UnitsCountPrefab: {fileID: 664809066705576803, guid: 0bf14d11408f1254d801c25697aace62, type: 3}
+  MounatinChance: 0.1
+  UnitsCountPrefab: {fileID: 3791630682131823945, guid: 51a738551640bd841bd6216ec36ad56b, type: 3}
+  PlNamePosOffset: {x: 0, y: 0.4}
   CameraSpeed: 0.97
-  MaxZoom: 5
+  MaxZoom: 7.4
   MinZoom: 1.5
-  MaxCamPos: {x: 15, y: 6.77}
-  MinCamPos: {x: -15, y: -6.52}
+  MaxCamPos: {x: 15, y: 10.2}
+  MinCamPos: {x: -15, y: -8.67}
   CitizenCost: 10
   WarriorCost: 50

@@ -10,9 +10,11 @@ public class MainScript : MonoBehaviour
     public Settings Settings;
     public Tilemap GroundTilemap;
     public Tilemap CellModsTilemap;
+    public Tilemap UnitsTilemap;
 
     public Canvas MainCanvas;
     public GameObject GameGui;
+    public GameObject PlayerColor;
     public bool IsCamMove;
 
     public List<Player> Players;
@@ -38,6 +40,7 @@ public class MainScript : MonoBehaviour
             {
                 Vector3Int pos = new Vector3Int(x, y, 0);
                 Vector3 TextPos = GroundTilemap.CellToWorld(pos);
+                TextPos = new Vector3(TextPos.x + Settings.PlNamePosOffset.x, TextPos.y + Settings.PlNamePosOffset.y, 0);
                 GameObject Text = Instantiate(MainScript.Instance.Settings.UnitsCountPrefab, TextPos, new Quaternion(), MainCanvas.transform);
                 Recources rec = new Recources(Recources.GetRandomCellType());
 
@@ -53,8 +56,6 @@ public class MainScript : MonoBehaviour
                 {
                     CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.MountainTile);
                 }
-
-                creatingCell.UpdateUnitsCount();
             }
         }
 
@@ -83,8 +84,9 @@ public class MainScript : MonoBehaviour
     
     private void UpdateGui()
     {
-        GameGui.GetComponent<Text>().text = $"{Players[PlayerStep].PlayerName}\nSteps:{Steps}";
-        GameObject.Find("Money").GetComponent<Text>().text = Players[PlayerStep].Money.ToString();
+        GameGui.GetComponentInChildren<Text>().text = $"{Players[PlayerStep].PlayerName}\nSteps:{Steps}";
+        GameObject.Find("Money").GetComponentInChildren<Text>().text = Players[PlayerStep].Money.ToString();
+        PlayerColor.GetComponent<Image>().color = Players[PlayerStep].PlayerColor;
     }
 
     private void MoveUnit()
@@ -93,15 +95,17 @@ public class MainScript : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !ShopScript.Instance.IsBuying)
         {
-            Vector3Int ClickedCell = GroundTilemap.WorldToCell(mousePos);
-            ClickedCell.z = 0;
+            Vector3Int ClickedCellPos = GroundTilemap.WorldToCell(mousePos);
+            ClickedCellPos.z = 0;
 
-            if (SelectedCell == null && World[ClickedCell].Units != null && World[ClickedCell].Units.Owner == Players[PlayerStep] && !World[ClickedCell].Units.IsMakeStep)
+            Cell ClickedCell = World[ClickedCellPos];
+
+            if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep] && !ClickedCell.Units.IsMakeStep)
             {
-                SelectedCell = World[ClickedCell];
+                SelectedCell = ClickedCell;
             }
 
-            else if(SelectedCell != null && World[ClickedCell] == SelectedCell)
+            else if(SelectedCell != null && ClickedCell == SelectedCell)
             {
                 SelectedCell = null;
             }
@@ -110,11 +114,12 @@ public class MainScript : MonoBehaviour
             {
                 foreach (var neighbor in SelectedCell.Neighbors())
                 {
-                    if (World[ClickedCell].IsGround && neighbor == ClickedCell)
+                    if (neighbor == ClickedCellPos && ClickedCell.Units != null && ClickedCell.Units.Owner != Players[PlayerStep] && SelectedCell.Units.Type != Unit.UnitType.Citizen || ClickedCell.IsGround && neighbor == ClickedCellPos)
                     {
-                        World[ClickedCell].AddUnits(SelectedCell.GetUnits());
+                        ClickedCell.AddUnits(SelectedCell.GetUnits());
                         SelectedCell = null;
-                        World[ClickedCell].Units.IsMakeStep = true;
+                        if(ClickedCell.Units != null)
+                            ClickedCell.Units.IsMakeStep = true;
                     }
                 }
             }

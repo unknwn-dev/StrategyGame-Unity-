@@ -7,12 +7,14 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "GameSettings"), SerializeField]
 public class Settings : ScriptableObject
 {
-    public static Settings Instance; 
+    public static Settings Instance;
 
     [Header("World Settings")]
     public Sprite BaseTileSprite;
     public Tile GroundTile;
     public Tile ForestTile;
+    public Tile CivilTile;
+    public Tile WarriorTile;
     [Range(0, 0.5f)]
     public float ForestChance;
     public Tile MountainTile;
@@ -21,6 +23,9 @@ public class Settings : ScriptableObject
 
     [Header("Prefabs")]
     public GameObject UnitsCountPrefab;
+
+    [Header("PlayerNameSettings")]
+    public Vector2 PlNamePosOffset;
 
     [Header("Camera Parameters")]
     public float CameraSpeed;

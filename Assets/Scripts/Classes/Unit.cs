@@ -13,6 +13,7 @@ public class Unit
 
     public Player Owner;
     public UnitType Type;
+    public bool IsInForest = false;
     public bool IsMakeStep = false;
 
     public Unit(Player own, UnitType type)
