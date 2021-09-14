@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Unit
 {
@@ -12,6 +11,7 @@ public class Unit
     }
 
     public Player Owner;
+    public Tile UnitTile = new Tile();
     public UnitType Type;
     public int HP;
     public int Damage;
@@ -22,15 +22,25 @@ public class Unit
         Owner = own;
         Type = type;
 
-        if(type == UnitType.Citizen)
+        if (type == UnitType.Citizen)
         {
             HP = MainScript.Instance.Settings.CitizenHP;
             Damage = MainScript.Instance.Settings.CitizenDmg;
+            UnitTile.sprite = MainScript.Instance.Settings.CitizSpr;
         }
         else if (type == UnitType.Warrior)
         {
             HP = MainScript.Instance.Settings.WarriorHP;
             Damage = MainScript.Instance.Settings.WarriorDmg;
+            UnitTile.sprite = MainScript.Instance.Settings.WarriorSpr;
         }
+
+        Color UnitColor = new Color();
+        UnitColor.r = Owner.PlayerColor.r - 0.2f ;
+        UnitColor.g = Owner.PlayerColor.g - 0.2f;
+        UnitColor.b = Owner.PlayerColor.b - 0.2f;
+        UnitColor.a = 1;
+
+        UnitTile.color = UnitColor;
     }
 }

@@ -13,8 +13,9 @@ public class Settings : ScriptableObject
     public Sprite BaseTileSprite;
     public Tile GroundTile;
     public Tile ForestTile;
-    public Tile CivilTile;
-    public Tile WarriorTile;
+    public Tile CastleTile;
+    public Sprite CitizSpr;
+    public Sprite WarriorSpr;
     [Range(0, 0.5f)]
     public float ForestChance;
     public Tile MountainTile;

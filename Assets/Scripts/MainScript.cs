@@ -19,7 +19,7 @@ public class MainScript : MonoBehaviour
 
     public List<Player> Players;
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
-    public int PlayerStep = 0;
+    public int PlayerStep = -1;
 
     private int Steps;
     private Cell SelectedCell;
@@ -68,6 +68,7 @@ public class MainScript : MonoBehaviour
             World[poses[p]].Building = new Building(Building.BuildType.Castle, pl);
             poses.RemoveAt(p);
         }
+
         NextStep();
 
     }
@@ -160,6 +161,8 @@ public class MainScript : MonoBehaviour
 
                         if (cell.Building != null && cell.Building.Owner == pl && cell.Building.Type == Building.BuildType.Castle)
                         {
+                            CellModsTilemap.SetTile(pos, Settings.CastleTile);
+
                             foreach (var neighbor in cell.Neighbors())
                             {
                                 if (cell.Owner == null)

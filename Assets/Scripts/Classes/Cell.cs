@@ -46,21 +46,15 @@ public class Cell
     {
         if (Units != null && Owner == null)
         {
-            if(Units.Type == Unit.UnitType.Citizen)
-                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.CivilTile);
-            if(Units.Type == Unit.UnitType.Warrior)
-                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.WarriorTile);
+            MainScript.Instance.UnitsTilemap.SetTile(CellPos, Units.UnitTile);
         }
         else if (Units != null && Owner != null)
         {
             MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
 
-            if (Units.Type == Unit.UnitType.Citizen)
-                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.CivilTile);
-            if (Units.Type == Unit.UnitType.Warrior)
-                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.WarriorTile);
+            MainScript.Instance.UnitsTilemap.SetTile(CellPos, Units.UnitTile);
         }
-        else if(Owner != null)
+        else if (Owner != null)
         {
             MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
             MainScript.Instance.UnitsTilemap.SetTile(CellPos, null);
@@ -83,7 +77,7 @@ public class Cell
 
     public void AddUnits(Cell OtherCell)
     {
-        if (Owner == null)
+        if (Units == null)
         {
             Units = OtherCell.Units;
             OtherCell.Units = null;
@@ -123,6 +117,15 @@ public class Cell
             OtherCell.Units = null;
             Units.HP = ResultHP;
         }
+
+        else if (ResultHP <= 0 && OthCellResultHP <= 0)
+        {
+            OtherCell.Units = null;
+            Units = null;
+        }
+
+        Debug.Log($"BattleLog Unit1HP: {ResultHP}, Unit2HP: {OthCellResultHP}");
+
 
         OtherCell.UpdateOwn();
         UpdateOwn();
