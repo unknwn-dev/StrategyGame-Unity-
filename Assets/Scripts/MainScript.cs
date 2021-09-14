@@ -31,8 +31,10 @@ public class MainScript : MonoBehaviour
     {
         Instance = this;
 
-        Players.Add(new Player("a", 0, Color.red));
-        Players.Add(new Player("b", 0, Color.gray));
+        Players.Add(new Player("Player1", 0, Color.red));
+        Players.Add(new Player("Player2", 0, Color.gray));
+        Players.Add(new Player("Player3", 0, Color.blue));
+        Players.Add(new Player("Player4", 0, Color.magenta));
 
 
         bounds = GroundTilemap.cellBounds;
