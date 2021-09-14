@@ -7,7 +7,8 @@ public class Unit
     {
         Null = -1,
         Citizen = 0,
-        Warrior = 1
+        Warrior = 1,
+        Settlers = 2
     }
 
     public Player Owner;
@@ -33,6 +34,12 @@ public class Unit
             HP = MainScript.Instance.Settings.WarriorHP;
             Damage = MainScript.Instance.Settings.WarriorDmg;
             UnitTile.sprite = MainScript.Instance.Settings.WarriorSpr;
+        }
+        else if (type == UnitType.Settlers)
+        {
+            HP = MainScript.Instance.Settings.SettlersHP;
+            UnitTile.sprite = MainScript.Instance.Settings.SettlersSpr;
+            Damage = 0;
         }
 
         Color UnitColor = new Color();

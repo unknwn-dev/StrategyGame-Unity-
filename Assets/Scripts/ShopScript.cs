@@ -67,6 +67,15 @@ public class ShopScript : MonoBehaviour
                         SelectedType = Unit.UnitType.Null;
                         IsBuying = false;
                     }
+
+                    else if (SelectedType == Unit.UnitType.Settlers && MovingPlayer.Money >= MainScript.Instance.Settings.SettlersCost)
+                    {
+                        MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= MainScript.Instance.Settings.SettlersCost;
+                        World[ClickedCell].Units = new Unit(MovingPlayer, SelectedType);
+                        World[ClickedCell].UpdateOwn();
+                        SelectedType = Unit.UnitType.Null;
+                        IsBuying = false;
+                    }
                 }
             }
         }

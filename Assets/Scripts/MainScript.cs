@@ -15,6 +15,7 @@ public class MainScript : MonoBehaviour
     public Canvas MainCanvas;
     public GameObject GameGui;
     public GameObject PlayerColor;
+    public GameObject Money;
     public bool IsCamMove;
 
     public List<Player> Players;
@@ -24,6 +25,7 @@ public class MainScript : MonoBehaviour
     private int Steps;
     private Cell SelectedCell;
     private BoundsInt bounds;
+    private bool IsInfoPanelOpened;
 
     void Start()
     {
@@ -79,12 +81,16 @@ public class MainScript : MonoBehaviour
         UpdateGui();
     }
 
+    public void OnInfoClick()
+    {
+        IsInfoPanelOpened = !IsInfoPanelOpened;
+        GameGui.GetComponentInParent<Animator>().SetBool("IsOpen", IsInfoPanelOpened);
+    }
 
-    
     private void UpdateGui()
     {
         GameGui.GetComponentInChildren<Text>().text = $"{Players[PlayerStep].PlayerName}\nSteps:{Steps}";
-        GameObject.Find("Money").GetComponentInChildren<Text>().text = Players[PlayerStep].Money.ToString();
+        Money.GetComponentInChildren<Text>().text = Players[PlayerStep].Money.ToString();
         PlayerColor.GetComponent<Image>().color = Players[PlayerStep].PlayerColor;
     }
 
