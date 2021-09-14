@@ -9,9 +9,9 @@ public class Cell
     public Unit Units;
     public Vector3Int CellPos;
     public bool IsGround;
-    private GameObject UnitsCount;
     public Recources Rec;
     public Player Owner;
+    public Building Building;
 
 
     private static Vector3Int
@@ -44,14 +44,20 @@ public class Cell
 
     public void UpdateOwn()
     {
-        if (Units != null)
+        if (Units != null && Owner == null)
         {
-            Owner = Units.Owner;
-            MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
-
             if(Units.Type == Unit.UnitType.Citizen)
                 MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.CivilTile);
             if(Units.Type == Unit.UnitType.Warrior)
+                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.WarriorTile);
+        }
+        else if (Units != null && Owner != null)
+        {
+            MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
+
+            if (Units.Type == Unit.UnitType.Citizen)
+                MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.CivilTile);
+            if (Units.Type == Unit.UnitType.Warrior)
                 MainScript.Instance.UnitsTilemap.SetTile(CellPos, MainScript.Instance.Settings.WarriorTile);
         }
         else if(Owner != null)
@@ -67,33 +73,58 @@ public class Cell
         }
     }
 
-    public Cell(Unit units, Vector3Int pos, bool isGround, GameObject text, Recources recources)
+    public Cell(Unit units, Vector3Int pos, bool isGround, Recources recources)
     {
         Units = units;
         CellPos = pos;
         IsGround = isGround;
-        UnitsCount = text;
         Rec = recources;
     }
 
-    public void AddUnits(Unit OtherUnits)
+    public void AddUnits(Cell OtherCell)
     {
-        if (Units == null)
+        if (Owner == null)
         {
-            Units = OtherUnits;
+            Units = OtherCell.Units;
+            OtherCell.Units = null;
+            OtherCell.UpdateOwn();
+            UpdateOwn();
+            return;
         }
-        else if (OtherUnits.Owner != Units.Owner && (int)Units.Type < (int)OtherUnits.Type)
-        {
-            Units = OtherUnits;
-        }
-        UpdateOwn();
-    }
 
-    public Unit GetUnits()
-    {
-        Unit outUnits = new Unit(Units.Owner, Units.Type);
-        Units = null;
+        bool IsUnitOnHisCell = Units.Owner == Owner;
+
+        int ResultHP, OthCellResultHP;
+
+        if (IsUnitOnHisCell)
+        {
+            ResultHP = (Units.HP + MainScript.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
+            OthCellResultHP = OtherCell.Units.HP - (Units.Damage - MainScript.Instance.Settings.DefenceDmgDebaf);
+        }
+        else
+        {
+            ResultHP = Units.HP - OtherCell.Units.Damage;
+            OthCellResultHP = OtherCell.Units.HP - Units.Damage;
+        }
+
+        if(ResultHP > 0 && OthCellResultHP > 0)
+        {
+            Units.HP = ResultHP;
+            OtherCell.Units.HP = OthCellResultHP;
+        }
+        else if (ResultHP <= 0 && OthCellResultHP > 0)
+        {
+            Units = OtherCell.Units;
+            OtherCell.Units = null;
+            Units.HP = OthCellResultHP;
+        }
+        else if (ResultHP > 0 && OthCellResultHP <= 0)
+        {
+            OtherCell.Units = null;
+            Units.HP = ResultHP;
+        }
+
+        OtherCell.UpdateOwn();
         UpdateOwn();
-        return outUnits;
     }
 }

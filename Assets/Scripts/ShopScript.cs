@@ -53,7 +53,8 @@ public class ShopScript : MonoBehaviour
                     if (SelectedType == Unit.UnitType.Citizen && MovingPlayer.Money >= MainScript.Instance.Settings.CitizenCost)
                     {
                         MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= MainScript.Instance.Settings.CitizenCost;
-                        World[ClickedCell].AddUnits(new Unit(MovingPlayer, SelectedType));
+                        World[ClickedCell].Units = new Unit(MovingPlayer, SelectedType);
+                        World[ClickedCell].UpdateOwn();
                         SelectedType = Unit.UnitType.Null;
                         IsBuying = false;
                     }
@@ -61,7 +62,8 @@ public class ShopScript : MonoBehaviour
                     else if(SelectedType == Unit.UnitType.Warrior && MovingPlayer.Money >= MainScript.Instance.Settings.WarriorCost)
                     {
                         MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= MainScript.Instance.Settings.WarriorCost;
-                        World[ClickedCell].AddUnits(new Unit(MovingPlayer, SelectedType));
+                        World[ClickedCell].Units = new Unit(MovingPlayer, SelectedType);
+                        World[ClickedCell].UpdateOwn();
                         SelectedType = Unit.UnitType.Null;
                         IsBuying = false;
                     }

@@ -39,12 +39,9 @@ public class MainScript : MonoBehaviour
             for (int y = bounds.yMin; y <= bounds.yMax; y++)
             {
                 Vector3Int pos = new Vector3Int(x, y, 0);
-                Vector3 TextPos = GroundTilemap.CellToWorld(pos);
-                TextPos = new Vector3(TextPos.x + Settings.PlNamePosOffset.x, TextPos.y + Settings.PlNamePosOffset.y, 0);
-                GameObject Text = Instantiate(MainScript.Instance.Settings.UnitsCountPrefab, TextPos, new Quaternion(), MainCanvas.transform);
                 Recources rec = new Recources(Recources.GetRandomCellType());
 
-                Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), Text, rec);
+                Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), rec);
 
                 World.Add(pos,creatingCell);
 
@@ -68,9 +65,10 @@ public class MainScript : MonoBehaviour
         foreach(var pl in Players)
         {
             int p = Random.Range(0, poses.Count);
-            World[poses[p]].AddUnits(new Unit(pl, Unit.UnitType.Citizen));
+            World[poses[p]].Building = new Building(Building.BuildType.Castle, pl);
             poses.RemoveAt(p);
         }
+        NextStep();
 
     }
 
@@ -114,9 +112,9 @@ public class MainScript : MonoBehaviour
             {
                 foreach (var neighbor in SelectedCell.Neighbors())
                 {
-                    if (neighbor == ClickedCellPos && ClickedCell.Units != null && ClickedCell.Units.Owner != Players[PlayerStep] && SelectedCell.Units.Type != Unit.UnitType.Citizen || ClickedCell.IsGround && neighbor == ClickedCellPos)
+                    if (ClickedCell.IsGround && neighbor == ClickedCellPos)
                     {
-                        ClickedCell.AddUnits(SelectedCell.GetUnits());
+                        ClickedCell.AddUnits(SelectedCell);
                         SelectedCell = null;
                         if(ClickedCell.Units != null)
                             ClickedCell.Units.IsMakeStep = true;
@@ -145,17 +143,37 @@ public class MainScript : MonoBehaviour
                 for (int y = bounds.yMin; y <= bounds.yMax; y++)
                 {
                     Vector3Int pos = new Vector3Int(x, y, 0);
+
                     if (TempWorld.ContainsKey(pos))
                     {
                         Cell cell = TempWorld[pos];
+
+                        if (cell.Units != null)
+                        {
+                            cell.Units.IsMakeStep = false;
+                        }
+
+                        if (cell.Building != null && cell.Building.Owner == pl && cell.Building.Type == Building.BuildType.Castle)
+                        {
+                            foreach (var neighbor in cell.Neighbors())
+                            {
+                                if (cell.Owner == null)
+                                {
+                                    cell.Owner = pl;
+                                    cell.UpdateOwn();
+                                }
+                                if (World[neighbor].Owner == null && World[neighbor].IsGround)
+                                {
+                                    World[neighbor].Owner = pl;
+                                    World[neighbor].UpdateOwn();
+                                }
+                            }
+                        }
+
                         if (cell.Owner == pl)
                         {
                             PlayerCells.Add(cell);
                             TempWorld.Remove(pos);
-                            if (cell.Units != null)
-                            {
-                                cell.Units.IsMakeStep = false;
-                            }
                         }
                     }
                 }

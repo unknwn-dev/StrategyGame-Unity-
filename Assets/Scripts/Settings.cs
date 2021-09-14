@@ -34,9 +34,26 @@ public class Settings : ScriptableObject
     public Vector2 MaxCamPos;
     public Vector2 MinCamPos;
 
-    [Header("ShopSettings")]
+
+    [Header("CitizenParams")]
     public int CitizenCost;
+    public int CitizenHP;
+    public int CitizenDmg;
+
+    [Header("WarriorParams")]
     public int WarriorCost;
+    public int WarriorHP;
+    public int WarriorDmg;
+
+    [Header("BattleParams")]
+    public int TerritoryHPBonus;
+    public int DefenceDmgDebaf;
+
+    [Header("CastleParams")]
+    public int CastleHP;
+
+    [Header("FarmParams")]
+    public int FarmHP;
 
     private void OnEnable()
     {

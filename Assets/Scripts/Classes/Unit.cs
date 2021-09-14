@@ -13,12 +13,24 @@ public class Unit
 
     public Player Owner;
     public UnitType Type;
-    public bool IsInForest = false;
+    public int HP;
+    public int Damage;
     public bool IsMakeStep = false;
 
     public Unit(Player own, UnitType type)
     {
         Owner = own;
         Type = type;
+
+        if(type == UnitType.Citizen)
+        {
+            HP = MainScript.Instance.Settings.CitizenHP;
+            Damage = MainScript.Instance.Settings.CitizenDmg;
+        }
+        else if (type == UnitType.Warrior)
+        {
+            HP = MainScript.Instance.Settings.WarriorHP;
+            Damage = MainScript.Instance.Settings.WarriorDmg;
+        }
     }
 }
