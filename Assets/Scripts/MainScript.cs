@@ -96,7 +96,12 @@ public class MainScript : MonoBehaviour
             Vector3Int ClickedCellPos = GroundTilemap.WorldToCell(mousePos);
             ClickedCellPos.z = 0;
 
-            Cell ClickedCell = World[ClickedCellPos];
+            Cell ClickedCell;
+
+            if (World.ContainsKey(ClickedCellPos))
+                ClickedCell = World[ClickedCellPos];
+            else
+                return;
 
             if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep] && !ClickedCell.Units.IsMakeStep)
             {
@@ -112,7 +117,7 @@ public class MainScript : MonoBehaviour
             {
                 foreach (var neighbor in SelectedCell.Neighbors())
                 {
-                    if (ClickedCell.IsGround && neighbor == ClickedCellPos)
+                    if (World.ContainsKey(neighbor) && ClickedCell.IsGround && neighbor == ClickedCellPos)
                     {
                         ClickedCell.AddUnits(SelectedCell);
                         SelectedCell = null;
