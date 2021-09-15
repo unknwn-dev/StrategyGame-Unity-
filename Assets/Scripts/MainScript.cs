@@ -99,7 +99,7 @@ public class MainScript : MonoBehaviour
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0) && !ShopScript.Instance.IsBuying)
+        if (Input.GetMouseButtonDown(0) && !ShopScript.Instance.IsBuying && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             Vector3Int ClickedCellPos = GroundTilemap.WorldToCell(mousePos);
             ClickedCellPos.z = 0;
@@ -111,18 +111,11 @@ public class MainScript : MonoBehaviour
             else
                 return;
 
-            if (SelectedCell == null && ClickedCell.IsGround)
-            {
-                bool isAct = false;
-                if (ClickedCell.Units != null) 
-                    isAct = ClickedCell.Units.Owner == Players[PlayerStep];
-
-                ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, isAct);
-            }
-
             if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep] && !ClickedCell.Units.IsMakeStep)
             {
                 SelectedCell = ClickedCell;
+
+                ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, true);
             }
 
             else if(SelectedCell != null && ClickedCell == SelectedCell)
@@ -147,6 +140,11 @@ public class MainScript : MonoBehaviour
                             ClickedCell.Units.IsMakeStep = true;
                     }
                 }
+            }
+
+            else
+            {
+                ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, false);
             }
         }
     }
