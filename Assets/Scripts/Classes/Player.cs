@@ -22,12 +22,18 @@ public class Player
         PlayerColor = color;
     }
 
-    public void MakeStep(List<Cell> PlayerCells)
+    public void MakeStep(List<Cell> PlayerCells, List<Unit> PlayerUnits)
     {
         foreach(var cell in PlayerCells)
         {
             Money += (int)cell.Rec.Income;
             cell.Rec.MakeStep();
+        }
+
+        foreach (var unit in PlayerUnits)
+        {
+            if(PlayerCells.Count > 0)
+                Money -= unit.MaintenanceCost;
         }
     }
 }

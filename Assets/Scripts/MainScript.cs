@@ -16,7 +16,8 @@ public class MainScript : MonoBehaviour
     public GameObject GameGui;
     public GameObject PlayerColor;
     public GameObject Money;
-    public bool IsCamMove;
+    public GameObject ActionsPanel;
+    public bool IsCanMove;
 
     public List<Player> Players;
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
@@ -35,7 +36,6 @@ public class MainScript : MonoBehaviour
         Players.Add(new Player("Player2", 0, Color.gray));
         Players.Add(new Player("Player3", 0, Color.blue));
         Players.Add(new Player("Player4", 0, Color.magenta));
-
 
         bounds = GroundTilemap.cellBounds;
 
@@ -69,11 +69,10 @@ public class MainScript : MonoBehaviour
         foreach(var pl in Players)
         {
             int p = Random.Range(0, poses.Count);
-            World[poses[p]].Building = new Building(Building.BuildType.Castle, pl);
+            World[poses[p]].Units = new Unit(pl, Unit.UnitType.Settlers);
+            World[poses[p]].UpdateOwn();
             poses.RemoveAt(p);
         }
-
-        NextStep();
 
     }
 
@@ -115,20 +114,26 @@ public class MainScript : MonoBehaviour
             if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep] && !ClickedCell.Units.IsMakeStep)
             {
                 SelectedCell = ClickedCell;
+                ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(SelectedCell);
             }
 
             else if(SelectedCell != null && ClickedCell == SelectedCell)
             {
                 SelectedCell = null;
+
+                ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
             }
 
-            else if (SelectedCell != null)
+            else if (IsCanMove)
             {
                 foreach (var neighbor in SelectedCell.Neighbors())
                 {
                     if (World.ContainsKey(neighbor) && ClickedCell.IsGround && neighbor == ClickedCellPos)
                     {
                         ClickedCell.AddUnits(SelectedCell);
+
+                        ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
+
                         SelectedCell = null;
                         if(ClickedCell.Units != null)
                             ClickedCell.Units.IsMakeStep = true;
@@ -140,61 +145,51 @@ public class MainScript : MonoBehaviour
 
     public void NextStep()
     {
-        Steps++;
+        SelectedCell = null;
+        ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
+
         PlayerStep++;
 
         if (PlayerStep > Players.Count - 1)
         {
+            Steps++;
             PlayerStep = 0;
-        }
 
-        Dictionary<Vector3Int, Cell> TempWorld = new Dictionary<Vector3Int, Cell>(World);
-        foreach(var pl in Players)
-        {
-            List<Cell> PlayerCells = new List<Cell>();
-            for (int x = bounds.xMin; x <= bounds.xMax; x++)
+            Dictionary<Vector3Int, Cell> TempWorld = new Dictionary<Vector3Int, Cell>(World);
+            foreach (var pl in Players)
             {
-                for (int y = bounds.yMin; y <= bounds.yMax; y++)
+                List<Cell> PlayerCells = new List<Cell>();
+                List<Unit> PlayerUnits = new List<Unit>();
+                for (int x = bounds.xMin; x <= bounds.xMax; x++)
                 {
-                    Vector3Int pos = new Vector3Int(x, y, 0);
-
-                    if (TempWorld.ContainsKey(pos))
+                    for (int y = bounds.yMin; y <= bounds.yMax; y++)
                     {
-                        Cell cell = TempWorld[pos];
+                        Vector3Int pos = new Vector3Int(x, y, 0);
 
-                        if (cell.Units != null)
+                        if (TempWorld.ContainsKey(pos))
                         {
-                            cell.Units.IsMakeStep = false;
-                        }
+                            Cell cell = TempWorld[pos];
 
-                        if (cell.Building != null && cell.Building.Owner == pl && cell.Building.Type == Building.BuildType.Castle)
-                        {
-                            CellModsTilemap.SetTile(pos, Settings.CastleTile);
-
-                            foreach (var neighbor in cell.Neighbors())
+                            if (cell.Units != null)
                             {
-                                if (cell.Owner == null)
+                                cell.Units.IsMakeStep = false;
+                                
+                                if(cell.Units.Owner == pl)
                                 {
-                                    cell.Owner = pl;
-                                    cell.UpdateOwn();
-                                }
-                                if (World[neighbor].Owner == null && World[neighbor].IsGround)
-                                {
-                                    World[neighbor].Owner = pl;
-                                    World[neighbor].UpdateOwn();
+                                    PlayerUnits.Add(cell.Units);
                                 }
                             }
-                        }
 
-                        if (cell.Owner == pl)
-                        {
-                            PlayerCells.Add(cell);
-                            TempWorld.Remove(pos);
+                            if (cell.Owner == pl)
+                            {
+                                PlayerCells.Add(cell);
+                                TempWorld.Remove(pos);
+                            }
                         }
                     }
                 }
+                pl.MakeStep(PlayerCells, PlayerUnits);
             }
-            pl.MakeStep(PlayerCells);
         }
     }
 }

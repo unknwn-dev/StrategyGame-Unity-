@@ -22,6 +22,7 @@ public class Settings : ScriptableObject
 
     [Header("Prefabs")]
     public GameObject UnitsCountPrefab;
+    public GameObject UnitsActionButtonPrefab;
 
     [Header("PlayerNameSettings")]
     public Vector2 PlNamePosOffset;
@@ -39,17 +40,20 @@ public class Settings : ScriptableObject
     public int CitizenCost;
     public int CitizenHP;
     public int CitizenDmg;
+    public int CitizenMaintenanceCost;
 
     [Header("WarriorParams")]
     public Sprite WarriorSpr;
     public int WarriorCost;
     public int WarriorHP;
     public int WarriorDmg;
+    public int WarriorMaintenanceCost;
 
     [Header("SettlersParams")]
     public Sprite SettlersSpr;
     public int SettlersCost;
     public int SettlersHP;
+    public int SettlersMaintenanceCost;
 
     [Header("BattleParams")]
     public int TerritoryHPBonus;

@@ -93,7 +93,7 @@ public class Cell
         if (IsUnitOnHisCell)
         {
             ResultHP = (Units.HP + MainScript.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
-            OthCellResultHP = OtherCell.Units.HP - (Units.Damage - MainScript.Instance.Settings.DefenceDmgDebaf);
+            OthCellResultHP = OtherCell.Units.HP - Mathf.RoundToInt(Units.Damage * 0.4f);
         }
         else
         {
@@ -123,8 +123,6 @@ public class Cell
             OtherCell.Units = null;
             Units = null;
         }
-
-        Debug.Log($"BattleLog Unit1HP: {ResultHP}, Unit2HP: {OthCellResultHP}");
 
 
         OtherCell.UpdateOwn();

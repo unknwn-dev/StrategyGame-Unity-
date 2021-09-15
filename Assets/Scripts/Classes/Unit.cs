@@ -16,6 +16,7 @@ public class Unit
     public UnitType Type;
     public int HP;
     public int Damage;
+    public int MaintenanceCost;
     public bool IsMakeStep = false;
 
     public Unit(Player own, UnitType type)
@@ -23,23 +24,28 @@ public class Unit
         Owner = own;
         Type = type;
 
+        Settings sett = MainScript.Instance.Settings;
+
         if (type == UnitType.Citizen)
         {
-            HP = MainScript.Instance.Settings.CitizenHP;
-            Damage = MainScript.Instance.Settings.CitizenDmg;
-            UnitTile.sprite = MainScript.Instance.Settings.CitizSpr;
+            HP = sett.CitizenHP;
+            Damage = sett.CitizenDmg;
+            UnitTile.sprite = sett.CitizSpr;
+            MaintenanceCost = sett.CitizenMaintenanceCost;
         }
         else if (type == UnitType.Warrior)
         {
-            HP = MainScript.Instance.Settings.WarriorHP;
-            Damage = MainScript.Instance.Settings.WarriorDmg;
-            UnitTile.sprite = MainScript.Instance.Settings.WarriorSpr;
+            HP = sett.WarriorHP;
+            Damage = sett.WarriorDmg;
+            UnitTile.sprite = sett.WarriorSpr;
+            MaintenanceCost = sett.WarriorMaintenanceCost;
         }
         else if (type == UnitType.Settlers)
         {
-            HP = MainScript.Instance.Settings.SettlersHP;
-            UnitTile.sprite = MainScript.Instance.Settings.SettlersSpr;
+            HP = sett.SettlersHP;
+            UnitTile.sprite = sett.SettlersSpr;
             Damage = 0;
+            MaintenanceCost = sett.SettlersMaintenanceCost;
         }
 
         Color UnitColor = new Color();
@@ -49,5 +55,32 @@ public class Unit
         UnitColor.a = 1;
 
         UnitTile.color = UnitColor;
+    }
+
+    public void BuildCity(Cell cell)
+    {
+        cell.Building = new Building(Building.BuildType.Castle, Owner);
+        cell.Units = null;
+        cell.UpdateOwn();
+
+        MainScript MSC = MainScript.Instance;
+
+        MSC.CellModsTilemap.SetTile(cell.CellPos, MSC.Settings.CastleTile);
+
+        foreach (var neighbor in cell.Neighbors())
+        {
+            if (cell.Owner == null)
+            {
+                cell.Owner = Owner;
+                cell.UpdateOwn();
+            }
+            if (MSC.World[neighbor].Owner == null && MSC.World[neighbor].IsGround)
+            {
+                MSC.World[neighbor].Owner = Owner;
+                MSC.World[neighbor].UpdateOwn();
+            }
+        }
+
+        MSC.ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
     }
 }
