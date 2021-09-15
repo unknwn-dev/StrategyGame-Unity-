@@ -77,6 +77,25 @@ public class Cell
 
     public void AddUnits(Cell OtherCell)
     {
+        if(Building != null && Building.Type == Building.BuildType.Castle && Building.Owner != OtherCell.Units.Owner)
+        {
+            Building.HP -= OtherCell.Units.Damage;
+            if(Building.HP <= 0)
+            {
+                Units = OtherCell.Units;
+                OtherCell.Units = null;
+                Owner = Units.Owner;
+                Building = null;
+                foreach (var neighbor in Neighbors())
+                {
+                    MainScript.Instance.World[neighbor].Owner = null;
+                    MainScript.Instance.World[neighbor].UpdateOwn();
+                }
+                Units.BuildCity(this);
+            }
+            return;
+        }
+
         if (Units == null)
         {
             Units = OtherCell.Units;
@@ -93,7 +112,7 @@ public class Cell
         if (IsUnitOnHisCell)
         {
             ResultHP = (Units.HP + MainScript.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
-            OthCellResultHP = OtherCell.Units.HP - Mathf.RoundToInt(Units.Damage * 0.4f);
+            OthCellResultHP = OtherCell.Units.HP - Mathf.RoundToInt(Units.Damage * 0.7f);
         }
         else
         {

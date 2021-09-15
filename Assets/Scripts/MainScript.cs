@@ -22,9 +22,9 @@ public class MainScript : MonoBehaviour
     public List<Player> Players;
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
     public int PlayerStep = -1;
+    public Cell SelectedCell;
 
     private int Steps;
-    private Cell SelectedCell;
     private BoundsInt bounds;
     private bool IsInfoPanelOpened;
 
@@ -32,10 +32,10 @@ public class MainScript : MonoBehaviour
     {
         Instance = this;
 
-        Players.Add(new Player("Player1", 0, Color.red));
-        Players.Add(new Player("Player2", 0, Color.gray));
-        Players.Add(new Player("Player3", 0, Color.blue));
-        Players.Add(new Player("Player4", 0, Color.magenta));
+        Players.Add(new Player("Player1", Color.red));
+        Players.Add(new Player("Player2", Color.gray));
+        //Players.Add(new Player("Player3", Color.blue));
+        //Players.Add(new Player("Player4", Color.magenta));
 
         bounds = GroundTilemap.cellBounds;
 
@@ -111,10 +111,18 @@ public class MainScript : MonoBehaviour
             else
                 return;
 
+            if (SelectedCell == null && ClickedCell.IsGround)
+            {
+                bool isAct = false;
+                if (ClickedCell.Units != null) 
+                    isAct = ClickedCell.Units.Owner == Players[PlayerStep];
+
+                ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, isAct);
+            }
+
             if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep] && !ClickedCell.Units.IsMakeStep)
             {
                 SelectedCell = ClickedCell;
-                ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(SelectedCell);
             }
 
             else if(SelectedCell != null && ClickedCell == SelectedCell)

@@ -57,7 +57,6 @@ public class Settings : ScriptableObject
 
     [Header("BattleParams")]
     public int TerritoryHPBonus;
-    public int DefenceDmgDebaf;
 
     [Header("CastleParams")]
     public int CastleHP;

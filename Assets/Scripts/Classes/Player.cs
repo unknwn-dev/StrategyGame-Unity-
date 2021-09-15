@@ -7,16 +7,14 @@ using UnityEngine;
 public class Player
 {
     public string PlayerName;
-    public int PlayerID;
     public Color PlayerColor;
     [HideInInspector]
     public Tile PlayerTile = new Tile();
     public int Money;
 
-    public Player(string name, int id, Color color)
+    public Player(string name, Color color)
     {
         PlayerName = name;
-        PlayerID = id;
         PlayerTile.sprite = MainScript.Instance.Settings.BaseTileSprite;
         PlayerTile.color = color;
         PlayerColor = color;

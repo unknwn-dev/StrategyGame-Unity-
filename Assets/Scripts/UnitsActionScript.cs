@@ -18,13 +18,19 @@ public class UnitsActionScript : MonoBehaviour
     public List<GameObject> ActButtons;
     public Cell SelectedCell;
 
-    public void InitMenu(Cell cell)
+    public void InitMenu(Cell cell, bool isAct)
     {
         SelectedCell = cell;
 
         gameObject.SetActive(true);
 
-        if(cell.Units.Type == Unit.UnitType.Citizen || cell.Units.Type == Unit.UnitType.Warrior)
+        ButtonsPanel.SetActive(isAct);
+
+        if(cell.Units == null || !isAct)
+        {
+            CellInfo();
+        }
+        else if(cell.Units.Type == Unit.UnitType.Citizen || cell.Units.Type == Unit.UnitType.Warrior)
         {
             ActButtons.Add(CreateButtonInstance(ActTypes.MoveUnit));
             ActButtons.Add(CreateButtonInstance(ActTypes.DeleteUnit));
@@ -36,6 +42,19 @@ public class UnitsActionScript : MonoBehaviour
             ActButtons.Add(CreateButtonInstance(ActTypes.BuildCity));
         }
     }
+
+    public void CellInfo()
+    {
+        if(SelectedCell.Units != null)
+            gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Units.Type}\nHP:{SelectedCell.Units.HP}  Dmg:{SelectedCell.Units.Damage}  Mtnc cost:{SelectedCell.Units.MaintenanceCost}");
+
+        else if (SelectedCell.Building != null)
+            gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Building.Type}\nHP:{SelectedCell.Building.HP}  Type:{SelectedCell.Rec.Type}  Income:{SelectedCell.Rec.Income}");
+        
+        else
+            gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Rec.Type}\nIncome:{SelectedCell.Rec.Income}");
+    }
+
     public GameObject CreateButtonInstance(ActTypes type)
     {
         GameObject Button = Instantiate(MainScript.Instance.Settings.UnitsActionButtonPrefab, ButtonsPanel.transform);
@@ -77,16 +96,20 @@ public class UnitsActionScript : MonoBehaviour
     public void OnMoveUnitPressed()
     {
         MainScript.Instance.IsCanMove = true;
+        gameObject.SetActive(false);
     }
 
     public void OnBuildCityPressed()
     {
         SelectedCell.Units.BuildCity(SelectedCell);
+        MainScript.Instance.SelectedCell = null;
+        CloseMenu();
     }
 
     public void OnDeleteUnitPressed()
     {
         SelectedCell.Units = null;
+        MainScript.Instance.SelectedCell = null;
         SelectedCell.UpdateOwn();
         CloseMenu();
     }
