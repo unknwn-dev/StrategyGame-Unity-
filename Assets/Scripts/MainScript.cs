@@ -68,6 +68,7 @@ public class MainScript : MonoBehaviour
 
         foreach(var pl in Players)
         {
+            pl.Money = Settings.StartMoney;
             int p = Random.Range(0, poses.Count);
             World[poses[p]].Units = new Unit(pl, Unit.UnitType.Settlers);
             World[poses[p]].UpdateOwn();
@@ -125,19 +126,20 @@ public class MainScript : MonoBehaviour
                 ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
             }
 
-            else if (IsCanMove)
+            else if (SelectedCell != null)
             {
                 foreach (var neighbor in SelectedCell.Neighbors())
                 {
                     if (World.ContainsKey(neighbor) && ClickedCell.IsGround && neighbor == ClickedCellPos)
                     {
+                        SelectedCell.Units.IsMakeStep = true;
+
                         ClickedCell.AddUnits(SelectedCell);
 
                         ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
 
                         SelectedCell = null;
-                        if(ClickedCell.Units != null)
-                            ClickedCell.Units.IsMakeStep = true;
+
                     }
                 }
             }

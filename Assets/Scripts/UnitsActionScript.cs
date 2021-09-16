@@ -9,9 +9,8 @@ public class UnitsActionScript : MonoBehaviour
 {
     public enum ActTypes
     {
-        MoveUnit=0,
-        BuildCity=1,
-        DeleteUnit=2
+        BuildCity=0,
+        DeleteUnit=1
     }
 
     public GameObject ButtonsPanel;
@@ -26,18 +25,18 @@ public class UnitsActionScript : MonoBehaviour
 
         ButtonsPanel.SetActive(isAct);
 
+        if (!cell.IsGround) return;
+
         if(cell.Units == null || !isAct)
         {
             CellInfo();
         }
         else if(cell.Units.Type == Unit.UnitType.Citizen || cell.Units.Type == Unit.UnitType.Warrior)
         {
-            ActButtons.Add(CreateButtonInstance(ActTypes.MoveUnit));
             ActButtons.Add(CreateButtonInstance(ActTypes.DeleteUnit));
         }
         else if (cell.Units.Type == Unit.UnitType.Settlers)
         {
-            ActButtons.Add(CreateButtonInstance(ActTypes.MoveUnit));
             ActButtons.Add(CreateButtonInstance(ActTypes.DeleteUnit));
             ActButtons.Add(CreateButtonInstance(ActTypes.BuildCity));
         }
@@ -59,12 +58,7 @@ public class UnitsActionScript : MonoBehaviour
     {
         GameObject Button = Instantiate(MainScript.Instance.Settings.UnitsActionButtonPrefab, ButtonsPanel.transform);
 
-        if (type == ActTypes.MoveUnit) 
-        {
-            Button.GetComponent<Button>().onClick.AddListener(OnMoveUnitPressed);
-            Button.GetComponentInChildren<TextMeshProUGUI>().SetText("Move\nUnit");
-        }
-        else if (type == ActTypes.BuildCity)
+        if (type == ActTypes.BuildCity)
         {
             Button.GetComponent<Button>().onClick.AddListener(OnBuildCityPressed);
             Button.GetComponentInChildren<TextMeshProUGUI>().SetText("Build\nCity");

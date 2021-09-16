@@ -10,6 +10,7 @@ public class Settings : ScriptableObject
     public static Settings Instance;
 
     [Header("World Settings")]
+    public int StartMoney;
     public Sprite BaseTileSprite;
     public Tile GroundTile;
     public Tile ForestTile;
