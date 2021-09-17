@@ -459,18 +459,6 @@ MonoBehaviour:
   IsCanMove: 0
   Players: []
   PlayerStep: 0
-  SelectedCell:
-    CellPos: {x: 0, y: 0, z: 0}
-    IsGround: 0
-    Owner:
-      PlayerName: 
-      PlayerColor: {r: 0, g: 0, b: 0, a: 0}
-      PlayerTile: {fileID: 0}
-      Money: 0
-    g: 0
-    h: 0
-    F: 0
-  SelectedCellNeighbors: []
 --- !u!4 &267103297
 Transform:
   m_ObjectHideFlags: 0
@@ -5158,17 +5146,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsPanel: {fileID: 341736076}
   ActButtons: []
-  SelectedCell:
-    CellPos: {x: 0, y: 0, z: 0}
-    IsGround: 0
-    Owner:
-      PlayerName: 
-      PlayerColor: {r: 0, g: 0, b: 0, a: 0}
-      PlayerTile: {fileID: 0}
-      Money: 0
-    g: 0
-    h: 0
-    F: 0
 --- !u!1 &989425485
 GameObject:
   m_ObjectHideFlags: 0

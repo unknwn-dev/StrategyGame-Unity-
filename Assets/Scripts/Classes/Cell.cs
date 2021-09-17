@@ -6,7 +6,20 @@ using TMPro;
 
 public class Cell
 {
-    public Unit Units;
+    private Unit units;
+    public Unit Units
+    {
+        get
+        {
+            return units;
+        }
+        set
+        {
+            units = value;
+            if(value != null)
+            value.CurrentCell = this;
+        }
+    }
     public Vector3Int CellPos;
     public bool IsGround;
     public Recources Rec;
@@ -53,6 +66,28 @@ public class Cell
             Vector3Int neighborPos = CellPos + direction;
             yield return neighborPos;
         }
+    }
+
+    public static List<Cell> GetNeighborCellsInRange(Cell currCell, int range)
+    {
+        List<Cell> result = new List<Cell>();
+
+        foreach(var cell in currCell.GetNeighborCells())
+        {
+            int tempRange = range - cell.Rec.MPForMove;
+
+            if(tempRange > 0 && cell.IsGround)
+            {
+                result.Add(cell);
+                result.AddRange(Cell.GetNeighborCellsInRange(cell, tempRange));
+            }
+            if(tempRange == 0 && cell.IsGround)
+            {
+                result.Add(cell);
+            }
+        }
+
+        return result;
     }
 
     public List<Cell> GetNeighborCells()
@@ -132,6 +167,7 @@ public class Cell
             OtherCell.Units = null;
             OtherCell.UpdateOwn();
             UpdateOwn();
+            Units.CurrentCell = this;
             return;
         }
 
@@ -163,6 +199,7 @@ public class Cell
             Units = OtherCell.Units;
             OtherCell.Units = null;
             Units.HP = OthCellResultHP;
+            Units.CurrentCell = this;
         }
         else if (ResultHP > 0 && OthCellResultHP <= 0)
         {

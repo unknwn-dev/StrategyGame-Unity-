@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,6 +19,8 @@ public class Unit
     public int Damage;
     public int MaintenanceCost;
     public int MovePoints;
+    public List<Cell> MovementPath;
+    public Cell CurrentCell;
 
     public Unit(Player own, UnitType type)
     {
@@ -103,5 +106,22 @@ public class Unit
         }
 
         MSC.ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
+    }
+
+    public void MoveThroughtPath()
+    {
+        while (MovePoints > 0)
+        {
+            if (MovementPath != null && MovementPath.Count > 0)
+            {
+                MovementPath[0].AddUnits(CurrentCell);
+                MovementPath.Remove(CurrentCell);
+                MovePoints -= CurrentCell.Rec.MPForMove;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 }

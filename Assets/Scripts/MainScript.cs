@@ -120,6 +120,15 @@ public class MainScript : MonoBehaviour
             {
                 SelectedCell = ClickedCell;
 
+
+                ClearMoveFieldTilemap();
+
+                foreach (var cell in Cell.GetNeighborCellsInRange(SelectedCell,SelectedCell.Units.MovePoints))
+                {
+                    if (cell != null)
+                        MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                }
+
                 ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, true);
             }
 
@@ -137,15 +146,15 @@ public class MainScript : MonoBehaviour
 
                 ClearMoveFieldTilemap();
 
-                //ClickedCell.AddUnits(SelectedCell);
+                SelectedCell.Units.MovementPath = FindPath(SelectedCell, ClickedCell);
 
-                //StartCoroutine(SelectedCell.FindPath(SelectedCell, ClickedCell));
-
-                foreach (var cell in FindPath(SelectedCell, ClickedCell))
+                foreach (var cell in SelectedCell.Units.MovementPath)
                 {
                     if (cell != null)
                         MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
                 }
+
+                SelectedCell.Units.MoveThroughtPath();
 
                 ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
 
@@ -198,8 +207,6 @@ public class MainScript : MonoBehaviour
 
                             if (cell.Units != null)
                             {
-                                cell.Units.MPToMax();
-                                
                                 if(cell.Units.Owner == pl)
                                 {
                                     PlayerUnits.Add(cell.Units);

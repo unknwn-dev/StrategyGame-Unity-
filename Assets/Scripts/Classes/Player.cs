@@ -30,8 +30,10 @@ public class Player
 
         foreach (var unit in PlayerUnits)
         {
+            unit.MoveThroughtPath();
             if(PlayerCells.Count > 0)
                 Money -= unit.MaintenanceCost;
+            unit.MPToMax();
         }
     }
 }
