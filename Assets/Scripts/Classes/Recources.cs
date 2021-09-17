@@ -13,6 +13,7 @@ public class Recources
 
     public CellType Type;
     public float Income;
+    public int MPForMove;
 
     public Recources(CellType type)
     {
@@ -21,6 +22,7 @@ public class Recources
         if(type == CellType.Flat)
         {
             Income = 1;
+            MPForMove = MainScript.Instance.Settings.FlatMPForMove;
         }
         else if (type == CellType.River)
         {
@@ -29,6 +31,7 @@ public class Recources
         else if (type == CellType.Forest)
         {
             Income = 2;
+            MPForMove = MainScript.Instance.Settings.ForestMPForMove;
         }
     }
 

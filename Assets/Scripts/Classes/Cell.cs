@@ -13,6 +13,20 @@ public class Cell
     public Player Owner;
     public Building Building;
 
+    //Finder values
+    public int g;
+    public int h;
+    public int F
+    {
+        get
+        {
+            if (Rec != null) 
+                return g + h + Rec.MPForMove;
+
+            return g + h;
+        }
+    }
+
 
     private static Vector3Int
         LEFT = new Vector3Int(-1, 0, 0),
@@ -41,6 +55,21 @@ public class Cell
         }
     }
 
+    public List<Cell> GetNeighborCells()
+    {
+        List<Cell> result = new List<Cell>();
+        MainScript MScrInst = MainScript.Instance;
+
+        foreach (var neighbor in Neighbors())
+        {
+            if (MScrInst.World.ContainsKey(neighbor) && MScrInst.World[neighbor].IsGround)
+            {
+                //MScrInst.MoveFieldTilemap.SetTile(neighbor, MScrInst.Settings.MvUnitFieldTile);
+                result.Add(MScrInst.World[neighbor]);
+            }
+        }
+        return result;
+    }
 
     public void UpdateOwn()
     {
@@ -77,14 +106,15 @@ public class Cell
 
     public void AddUnits(Cell OtherCell)
     {
-        if(Building != null && Building.Type == Building.BuildType.Castle && Building.Owner != OtherCell.Units.Owner)
+        if (OtherCell.Units.MovePoints <= 0) return;
+
+        if(Building != null && Building.Type == Building.BuildType.Castle && Building.Owner != OtherCell.Units.Owner && OtherCell.Units.MovePoints > 0)
         {
             Building.HP -= OtherCell.Units.Damage;
+            OtherCell.Rec.MPForMove = 0;
             if(Building.HP <= 0)
             {
-                Units = OtherCell.Units;
-                OtherCell.Units = null;
-                Owner = Units.Owner;
+                Owner = OtherCell.Units.Owner;
                 Building = null;
                 foreach (var neighbor in Neighbors())
                 {
@@ -109,6 +139,7 @@ public class Cell
 
         int ResultHP, OthCellResultHP;
 
+
         if (IsUnitOnHisCell)
         {
             ResultHP = (Units.HP + MainScript.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
@@ -124,9 +155,11 @@ public class Cell
         {
             Units.HP = ResultHP;
             OtherCell.Units.HP = OthCellResultHP;
+            OtherCell.Rec.MPForMove = 0;
         }
         else if (ResultHP <= 0 && OthCellResultHP > 0)
         {
+            OtherCell.Rec.MPForMove = 0;
             Units = OtherCell.Units;
             OtherCell.Units = null;
             Units.HP = OthCellResultHP;

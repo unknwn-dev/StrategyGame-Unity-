@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using System.Linq;
 
 public class MainScript : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MainScript : MonoBehaviour
     public Tilemap GroundTilemap;
     public Tilemap CellModsTilemap;
     public Tilemap UnitsTilemap;
+    public Tilemap MoveFieldTilemap;
 
     public Canvas MainCanvas;
     public GameObject GameGui;
@@ -20,9 +22,11 @@ public class MainScript : MonoBehaviour
     public bool IsCanMove;
 
     public List<Player> Players;
+    [SerializeField]
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
     public int PlayerStep = -1;
     public Cell SelectedCell;
+    public List<Cell> SelectedCellNeighbors = new List<Cell>();
 
     private int Steps;
     private BoundsInt bounds;
@@ -112,36 +116,42 @@ public class MainScript : MonoBehaviour
             else
                 return;
 
-            if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep] && !ClickedCell.Units.IsMakeStep)
+            if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep])
             {
                 SelectedCell = ClickedCell;
 
                 ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, true);
             }
 
-            else if(SelectedCell != null && ClickedCell == SelectedCell)
+            else if (SelectedCell != null && ClickedCell == SelectedCell)
             {
                 SelectedCell = null;
+
+                ClearMoveFieldTilemap();
 
                 ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
             }
 
-            else if (SelectedCell != null)
+            else if (SelectedCell != null && ClickedCell.IsGround)
             {
-                foreach (var neighbor in SelectedCell.Neighbors())
+
+                ClearMoveFieldTilemap();
+
+                //ClickedCell.AddUnits(SelectedCell);
+
+                //StartCoroutine(SelectedCell.FindPath(SelectedCell, ClickedCell));
+
+                foreach (var cell in FindPath(SelectedCell, ClickedCell))
                 {
-                    if (World.ContainsKey(neighbor) && ClickedCell.IsGround && neighbor == ClickedCellPos)
-                    {
-                        SelectedCell.Units.IsMakeStep = true;
-
-                        ClickedCell.AddUnits(SelectedCell);
-
-                        ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
-
-                        SelectedCell = null;
-
-                    }
+                    if (cell != null)
+                        MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
                 }
+
+                ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
+
+                SelectedCell = null;
+
+
             }
 
             else
@@ -151,10 +161,18 @@ public class MainScript : MonoBehaviour
         }
     }
 
+    public void ClearMoveFieldTilemap()
+    {
+        MoveFieldTilemap.ClearAllTiles();
+
+        SelectedCellNeighbors = new List<Cell>();
+    }
+
     public void NextStep()
     {
         SelectedCell = null;
         ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
+        ClearMoveFieldTilemap();
 
         PlayerStep++;
 
@@ -180,7 +198,7 @@ public class MainScript : MonoBehaviour
 
                             if (cell.Units != null)
                             {
-                                cell.Units.IsMakeStep = false;
+                                cell.Units.MPToMax();
                                 
                                 if(cell.Units.Owner == pl)
                                 {
@@ -199,5 +217,89 @@ public class MainScript : MonoBehaviour
                 pl.MakeStep(PlayerCells, PlayerUnits);
             }
         }
+    }
+    protected static int GetEstimatedPathCost(Vector3Int startPosition, Vector3Int targetPosition)
+    {
+        return Mathf.Max(Mathf.Max(Mathf.Abs(startPosition.x - targetPosition.x), Mathf.Abs(startPosition.y - targetPosition.y), Mathf.Abs(startPosition.z - targetPosition.z)));
+    }
+
+    public List<Cell> FindPath(Cell from, Cell to)
+    {
+        List<Cell> opened = new List<Cell>();
+        List<Cell> closed = new List<Cell>();
+
+        Cell currentCell = from;
+
+        currentCell.g = 0;
+        currentCell.h = GetEstimatedPathCost(from.CellPos, to.CellPos);
+
+        opened.Add(currentCell);
+
+        while (opened.Count != 0)
+        {
+            // Sorting the open list to get the tile with the lowest F.
+            opened = opened.OrderBy(x => x.F).ThenByDescending(x => x.g).ToList();
+            currentCell = opened[0];
+
+            // Removing the current tile from the open list and adding it to the closed list.
+            opened.Remove(currentCell);
+            closed.Add(currentCell);
+
+            int g = currentCell.g + 1;
+
+            // If there is a target tile in the closed list, we have found a path.
+            if (closed.Contains(to))
+            {
+                break;
+            }
+
+            // Investigating each adjacent tile of the current tile.
+            foreach (Cell adjacentTile in currentCell.GetNeighborCells())
+            {
+
+                // Ignore not walkable adjacent tiles.
+                if (!adjacentTile.IsGround)
+                {
+                    continue;
+                }
+
+                // Ignore the tile if it's already in the closed list.
+                if (closed.Contains(adjacentTile))
+                {
+                    continue;
+                }
+
+                // If it's not in the open list - add it and compute G and H.
+                if (!(opened.Contains(adjacentTile)))
+                {
+                    adjacentTile.g = g;
+                    adjacentTile.h = GetEstimatedPathCost(adjacentTile.CellPos, to.CellPos);
+                    opened.Add(adjacentTile);
+                }
+                // Otherwise check if using current G we can get a lower value of F, if so update it's value.
+                else if (adjacentTile.F > g + adjacentTile.h)
+                {
+                    adjacentTile.g = g;
+                }
+            }
+        }
+
+        List<Cell> finalPathTiles = new List<Cell>();
+        // Backtracking - setting the final path.
+        if (closed.Contains(to))
+        {
+            currentCell = to;
+            finalPathTiles.Add(currentCell);
+
+            for (int i = to.g - 1; i >= 0; i--)
+            {
+                currentCell = closed.Find(x => x.g == i && currentCell.GetNeighborCells().Contains(x));
+                finalPathTiles.Add(currentCell);
+            }
+
+            finalPathTiles.Reverse();
+        }
+
+        return finalPathTiles;
     }
 }

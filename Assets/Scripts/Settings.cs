@@ -13,8 +13,11 @@ public class Settings : ScriptableObject
     public int StartMoney;
     public Sprite BaseTileSprite;
     public Tile GroundTile;
-    public Tile ForestTile;
     public Tile CastleTile;
+    public Tile MvUnitFieldTile;
+    public int FlatMPForMove;
+    public int ForestMPForMove;
+    public Tile ForestTile;
     [Range(0, 0.5f)]
     public float ForestChance;
     public Tile MountainTile;
@@ -42,6 +45,7 @@ public class Settings : ScriptableObject
     public int CitizenHP;
     public int CitizenDmg;
     public int CitizenMaintenanceCost;
+    public int CitizenMP;
 
     [Header("WarriorParams")]
     public Sprite WarriorSpr;
@@ -49,12 +53,14 @@ public class Settings : ScriptableObject
     public int WarriorHP;
     public int WarriorDmg;
     public int WarriorMaintenanceCost;
+    public int WarriorMP;
 
     [Header("SettlersParams")]
     public Sprite SettlersSpr;
     public int SettlersCost;
     public int SettlersHP;
     public int SettlersMaintenanceCost;
+    public int SettlersMP;
 
     [Header("BattleParams")]
     public int TerritoryHPBonus;

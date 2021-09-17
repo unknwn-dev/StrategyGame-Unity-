@@ -19,13 +19,21 @@ public class UnitsActionScript : MonoBehaviour
 
     public void InitMenu(Cell cell, bool isAct)
     {
+        if (!cell.IsGround)
+        {
+            if (gameObject.activeInHierarchy)
+            {
+                CloseMenu();
+            }
+            return;
+        }
+
         SelectedCell = cell;
 
         gameObject.SetActive(true);
 
         ButtonsPanel.SetActive(isAct);
 
-        if (!cell.IsGround) return;
 
         if(cell.Units == null || !isAct)
         {
@@ -69,7 +77,7 @@ public class UnitsActionScript : MonoBehaviour
             Button.GetComponentInChildren<TextMeshProUGUI>().SetText("Delete\nUnit");
         }
 
-        gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Units.Type}\nHP:{SelectedCell.Units.HP}  Dmg:{SelectedCell.Units.Damage}  Mtnc cost:{SelectedCell.Units.MaintenanceCost}");
+        gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Units.Type}\nHP:{SelectedCell.Units.HP}  Dmg:{SelectedCell.Units.Damage}  MP:{SelectedCell.Units.MovePoints}  Mtnc cost:{SelectedCell.Units.MaintenanceCost}");
 
         return Button;
     }
@@ -98,6 +106,7 @@ public class UnitsActionScript : MonoBehaviour
         SelectedCell.Units.BuildCity(SelectedCell);
         MainScript.Instance.SelectedCell = null;
         CloseMenu();
+        MainScript.Instance.ClearMoveFieldTilemap();
     }
 
     public void OnDeleteUnitPressed()
@@ -106,6 +115,7 @@ public class UnitsActionScript : MonoBehaviour
         MainScript.Instance.SelectedCell = null;
         SelectedCell.UpdateOwn();
         CloseMenu();
+        MainScript.Instance.ClearMoveFieldTilemap();
     }
 
 }

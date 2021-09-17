@@ -17,7 +17,7 @@ public class Unit
     public int HP;
     public int Damage;
     public int MaintenanceCost;
-    public bool IsMakeStep = false;
+    public int MovePoints;
 
     public Unit(Player own, UnitType type)
     {
@@ -32,6 +32,7 @@ public class Unit
             Damage = sett.CitizenDmg;
             UnitTile.sprite = sett.CitizSpr;
             MaintenanceCost = sett.CitizenMaintenanceCost;
+            MovePoints = sett.CitizenMP;
         }
         else if (type == UnitType.Warrior)
         {
@@ -39,6 +40,7 @@ public class Unit
             Damage = sett.WarriorDmg;
             UnitTile.sprite = sett.WarriorSpr;
             MaintenanceCost = sett.WarriorMaintenanceCost;
+            MovePoints = sett.WarriorMP;
         }
         else if (type == UnitType.Settlers)
         {
@@ -46,6 +48,7 @@ public class Unit
             UnitTile.sprite = sett.SettlersSpr;
             Damage = 0;
             MaintenanceCost = sett.SettlersMaintenanceCost;
+            MovePoints = sett.SettlersMP;
         }
 
         Color UnitColor = new Color();
@@ -55,6 +58,24 @@ public class Unit
         UnitColor.a = 1;
 
         UnitTile.color = UnitColor;
+    }
+
+    public void MPToMax()
+    {
+        Settings sett = MainScript.Instance.Settings;
+
+        if (Type == UnitType.Citizen)
+        {
+            MovePoints = sett.CitizenMP;
+        }
+        else if (Type == UnitType.Warrior)
+        {
+            MovePoints = sett.WarriorMP;
+        }
+        else if (Type == UnitType.Settlers)
+        {
+            MovePoints = sett.SettlersMP;
+        }
     }
 
     public void BuildCity(Cell cell)
