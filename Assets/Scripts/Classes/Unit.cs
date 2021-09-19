@@ -19,7 +19,7 @@ public class Unit
     public int Damage;
     public int MaintenanceCost;
     public int MovePoints;
-    public List<Cell> MovementPath;
+    public List<Cell> MovementPath = new List<Cell>();
     public Cell CurrentCell;
 
     public Unit(Player own, UnitType type)

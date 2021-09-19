@@ -123,10 +123,21 @@ public class MainScript : MonoBehaviour
 
                 ClearMoveFieldTilemap();
 
-                foreach (var cell in Cell.GetNeighborCellsInRange(SelectedCell,SelectedCell.Units.MovePoints))
+                if (SelectedCell.Units.MovementPath.Count > 0)
                 {
-                    if (cell != null)
-                        MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                    foreach (var cell in SelectedCell.Units.MovementPath)
+                    {
+                        if (cell != null)
+                            MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                    }
+                }
+                else
+                {
+                    foreach (var cell in Cell.GetNeighborCellsInRange(SelectedCell, SelectedCell.Units.MovePoints))
+                    {
+                        if (cell != null)
+                            MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                    }
                 }
 
                 ActionsPanel.GetComponent<UnitsActionScript>().InitMenu(ClickedCell, true);
@@ -143,24 +154,16 @@ public class MainScript : MonoBehaviour
 
             else if (SelectedCell != null && ClickedCell.IsGround)
             {
-
                 ClearMoveFieldTilemap();
 
                 SelectedCell.Units.MovementPath = FindPath(SelectedCell, ClickedCell);
+
 
                 foreach (var cell in SelectedCell.Units.MovementPath)
                 {
                     if (cell != null)
                         MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
                 }
-
-                SelectedCell.Units.MoveThroughtPath();
-
-                ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
-
-                SelectedCell = null;
-
-
             }
 
             else
