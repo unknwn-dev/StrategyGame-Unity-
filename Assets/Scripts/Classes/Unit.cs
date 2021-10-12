@@ -114,9 +114,12 @@ public class Unit
         {
             if (MovementPath != null && MovementPath.Count > 0)
             {
-                MovementPath[0].AddUnits(CurrentCell);
-                MovementPath.Remove(CurrentCell);
-                MovePoints -= CurrentCell.Rec.MPForMove;
+                if (MovementPath[0].Units == null)
+                {
+                    MovementPath[0].AddUnits(CurrentCell);
+                    MovementPath.Remove(CurrentCell);
+                    MovePoints -= CurrentCell.Rec.MPForMove;
+                }
             }
             else
             {

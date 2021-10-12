@@ -156,13 +156,20 @@ public class MainScript : MonoBehaviour
             {
                 ClearMoveFieldTilemap();
 
-                SelectedCell.Units.MovementPath = FindPath(SelectedCell, ClickedCell);
-
-
-                foreach (var cell in SelectedCell.Units.MovementPath)
+                if (ClickedCell.Units == null)
                 {
-                    if (cell != null)
-                        MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                    SelectedCell.Units.MovementPath = FindPath(SelectedCell, ClickedCell);
+
+
+                    foreach (var cell in SelectedCell.Units.MovementPath)
+                    {
+                        if (cell != null)
+                            MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                    }
+                }
+                else
+                {
+                    SelectedCell.AddUnits(ClickedCell);
                 }
             }
 
