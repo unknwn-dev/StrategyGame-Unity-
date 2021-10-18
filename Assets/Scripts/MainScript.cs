@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
-using System.Linq;
 
 public class MainScript : MonoBehaviour
 {
@@ -27,10 +24,11 @@ public class MainScript : MonoBehaviour
     public int PlayerStep = -1;
     public Cell SelectedCell;
     public List<Cell> SelectedCellNeighbors = new List<Cell>();
+    public int Steps;
 
-    private int Steps;
     private BoundsInt bounds;
     private bool IsInfoPanelOpened;
+
 
     void Start()
     {
@@ -41,28 +39,8 @@ public class MainScript : MonoBehaviour
         //Players.Add(new Player("Player3", Color.blue));
         //Players.Add(new Player("Player4", Color.magenta));
 
-        bounds = GroundTilemap.cellBounds;
 
-        for (int x = bounds.xMin; x <= bounds.xMax; x++) {
-            for (int y = bounds.yMin; y <= bounds.yMax; y++)
-            {
-                Vector3Int pos = new Vector3Int(x, y, 0);
-                Recources rec = new Recources(Recources.GetRandomCellType());
-
-                Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), rec);
-
-                World.Add(pos,creatingCell);
-
-                if(rec.Type == Recources.CellType.Forest && creatingCell.IsGround)
-                {
-                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.ForestTile);
-                }
-                else if (rec.Type == Recources.CellType.Mountain && creatingCell.IsGround)
-                {
-                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.MountainTile);
-                }
-            }
-        }
+        InitMap();
 
         List<Vector3Int> poses = new List<Vector3Int>();
         foreach(var wp in World)
@@ -84,7 +62,7 @@ public class MainScript : MonoBehaviour
     void Update()
     {
         MoveUnit();
-        UpdateGui();
+        GUIController.UpdateGui();
     }
 
     public void OnInfoClick()
@@ -93,12 +71,33 @@ public class MainScript : MonoBehaviour
         GameGui.GetComponentInParent<Animator>().SetBool("IsOpen", IsInfoPanelOpened);
     }
 
-    private void UpdateGui()
+    public void InitMap()
     {
-        GameGui.GetComponentInChildren<Text>().text = $"{Players[PlayerStep].PlayerName}\nSteps:{Steps}";
-        Money.GetComponentInChildren<Text>().text = Players[PlayerStep].Money.ToString();
-        PlayerColor.GetComponent<Image>().color = Players[PlayerStep].PlayerColor;
+        bounds = GroundTilemap.cellBounds;
+        for (int x = bounds.xMin; x <= bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y <= bounds.yMax; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+                Recources rec = new Recources(Recources.GetRandomCellType());
+
+                Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), rec);
+
+                World.Add(pos, creatingCell);
+
+                if (rec.Type == Recources.CellType.Forest && creatingCell.IsGround)
+                {
+                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.ForestTile);
+                }
+                else if (rec.Type == Recources.CellType.Mountain && creatingCell.IsGround)
+                {
+                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.MountainTile);
+                }
+            }
+        }
     }
+
+    
 
     private void MoveUnit()
     {
@@ -152,13 +151,24 @@ public class MainScript : MonoBehaviour
                 ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
             }
 
+            else if(SelectedCell != null && SelectedCell.Units.MovementPath.Count > 0 && SelectedCell.Units.MovementPath[SelectedCell.Units.MovementPath.Count-1] == ClickedCell)
+            {
+                SelectedCell.Units.MoveThroughtPath();
+
+                SelectedCell = null;
+
+                ClearMoveFieldTilemap();
+
+                ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
+            }
+
             else if (SelectedCell != null && ClickedCell.IsGround)
             {
                 ClearMoveFieldTilemap();
 
                 if (ClickedCell.Units == null)
                 {
-                    SelectedCell.Units.MovementPath = FindPath(SelectedCell, ClickedCell);
+                    SelectedCell.Units.MovementPath = PathFinder.Find(SelectedCell, ClickedCell);
 
 
                     foreach (var cell in SelectedCell.Units.MovementPath)
@@ -172,6 +182,7 @@ public class MainScript : MonoBehaviour
                     SelectedCell.AddUnits(ClickedCell);
                 }
             }
+
 
             else
             {
@@ -235,88 +246,5 @@ public class MainScript : MonoBehaviour
             }
         }
     }
-    protected static int GetEstimatedPathCost(Vector3Int startPosition, Vector3Int targetPosition)
-    {
-        return Mathf.Max(Mathf.Max(Mathf.Abs(startPosition.x - targetPosition.x), Mathf.Abs(startPosition.y - targetPosition.y), Mathf.Abs(startPosition.z - targetPosition.z)));
-    }
-
-    public List<Cell> FindPath(Cell from, Cell to)
-    {
-        List<Cell> opened = new List<Cell>();
-        List<Cell> closed = new List<Cell>();
-
-        Cell currentCell = from;
-
-        currentCell.g = 0;
-        currentCell.h = GetEstimatedPathCost(from.CellPos, to.CellPos);
-
-        opened.Add(currentCell);
-
-        while (opened.Count != 0)
-        {
-            // Sorting the open list to get the tile with the lowest F.
-            opened = opened.OrderBy(x => x.F).ThenByDescending(x => x.g).ToList();
-            currentCell = opened[0];
-
-            // Removing the current tile from the open list and adding it to the closed list.
-            opened.Remove(currentCell);
-            closed.Add(currentCell);
-
-            int g = currentCell.g + 1;
-
-            // If there is a target tile in the closed list, we have found a path.
-            if (closed.Contains(to))
-            {
-                break;
-            }
-
-            // Investigating each adjacent tile of the current tile.
-            foreach (Cell adjacentTile in currentCell.GetNeighborCells())
-            {
-
-                // Ignore not walkable adjacent tiles.
-                if (!adjacentTile.IsGround)
-                {
-                    continue;
-                }
-
-                // Ignore the tile if it's already in the closed list.
-                if (closed.Contains(adjacentTile))
-                {
-                    continue;
-                }
-
-                // If it's not in the open list - add it and compute G and H.
-                if (!(opened.Contains(adjacentTile)))
-                {
-                    adjacentTile.g = g;
-                    adjacentTile.h = GetEstimatedPathCost(adjacentTile.CellPos, to.CellPos);
-                    opened.Add(adjacentTile);
-                }
-                // Otherwise check if using current G we can get a lower value of F, if so update it's value.
-                else if (adjacentTile.F > g + adjacentTile.h)
-                {
-                    adjacentTile.g = g;
-                }
-            }
-        }
-
-        List<Cell> finalPathTiles = new List<Cell>();
-        // Backtracking - setting the final path.
-        if (closed.Contains(to))
-        {
-            currentCell = to;
-            finalPathTiles.Add(currentCell);
-
-            for (int i = to.g - 1; i >= 0; i--)
-            {
-                currentCell = closed.Find(x => x.g == i && currentCell.GetNeighborCells().Contains(x));
-                finalPathTiles.Add(currentCell);
-            }
-
-            finalPathTiles.Reverse();
-        }
-
-        return finalPathTiles;
-    }
+    
 }
