@@ -99,8 +99,6 @@ public class MainScript : MonoBehaviour
         }
     }
 
-    
-
     private void MoveUnit()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -216,6 +214,7 @@ public class MainScript : MonoBehaviour
             Dictionary<Vector3Int, Cell> TempWorld = new Dictionary<Vector3Int, Cell>(World);
             foreach (var pl in Players)
             {
+
                 List<Cell> PlayerCells = new List<Cell>();
                 List<Unit> PlayerUnits = new List<Unit>();
                 for (int x = bounds.xMin; x <= bounds.xMax; x++)

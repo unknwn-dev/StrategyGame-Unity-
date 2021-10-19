@@ -23,6 +23,17 @@ MonoBehaviour:
   ForestChance: 0.15
   MountainTile: {fileID: 11400000, guid: a6505d10bbe3aa54e9388ac2298443be, type: 2}
   MounatinChance: 0.1
+  PlayersColors:
+  - {r: 0.9811321, g: 0.83530015, b: 0.0046279924, a: 1}
+  - {r: 0.5660378, g: 0.55125016, b: 0.54200786, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.65882355, b: 0.22006464, a: 1}
+  - {r: 0, g: 0.84313726, b: 0.54588175, a: 1}
+  - {r: 0, g: 0.7141876, b: 1, a: 1}
+  - {r: 0, g: 0.0572505, b: 1, a: 1}
+  - {r: 0.84296924, g: 0.39489147, b: 0.9622642, a: 1}
+  - {r: 1, g: 0, b: 0.5364666, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
   UnitsCountPrefab: {fileID: 3791630682131823945, guid: 51a738551640bd841bd6216ec36ad56b, type: 3}
   UnitsActionButtonPrefab: {fileID: 2340032482234653317, guid: 75821bd5305eec24ca303e26e61e2890, type: 3}
   PlNamePosOffset: {x: 0, y: 0.4}
@@ -30,7 +41,7 @@ MonoBehaviour:
   MaxZoom: 7.4
   MinZoom: 1.5
   MaxCamPos: {x: 15, y: 10.2}
-  MinCamPos: {x: -15, y: -8.67}
+  MinCamPos: {x: -15, y: -10}
   CitizSpr: {fileID: 21300000, guid: 337b0b0fad0394d4ea939664a9acbf6d, type: 3}
   CitizenCost: 50
   CitizenHP: 15
