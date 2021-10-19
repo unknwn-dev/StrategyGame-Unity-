@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "GameSettings"), SerializeField]
 public class Settings : ScriptableObject
