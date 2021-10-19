@@ -34,29 +34,16 @@ public class MainScript : MonoBehaviour
     {
         Instance = this;
 
-        Players.Add(new Player("Player1", Color.red));
-        Players.Add(new Player("Player2", Color.gray));
-        //Players.Add(new Player("Player3", Color.blue));
-        //Players.Add(new Player("Player4", Color.magenta));
+        List<Color> plCols = new List<Color>(Settings.Instance.PlayersColors);
 
+        for (int i = 0; i < MenuController.PlayersCount; i++)
+        {
+            int randCol = Random.Range(0, plCols.Count - 1);
+            Players.Add(new Player("p" + i, plCols[randCol]));
+            plCols.Remove(plCols[randCol]);
+        }
 
         InitMap();
-
-        List<Vector3Int> poses = new List<Vector3Int>();
-        foreach(var wp in World)
-        {
-            if (wp.Value.IsGround) poses.Add(wp.Key);
-        }
-
-        foreach(var pl in Players)
-        {
-            pl.Money = Settings.StartMoney;
-            int p = Random.Range(0, poses.Count);
-            World[poses[p]].Units = new Unit(pl, Unit.UnitType.Settlers);
-            World[poses[p]].UpdateOwn();
-            poses.RemoveAt(p);
-        }
-
     }
 
     void Update()
@@ -94,6 +81,21 @@ public class MainScript : MonoBehaviour
                     CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.MountainTile);
                 }
             }
+        }
+
+        List<Vector3Int> poses = new List<Vector3Int>();
+        foreach (var wp in World)
+        {
+            if (wp.Value.IsGround) poses.Add(wp.Key);
+        }
+
+        foreach (var pl in Players)
+        {
+            pl.Money = Settings.StartMoney;
+            int p = Random.Range(0, poses.Count);
+            World[poses[p]].Units = new Unit(pl, Unit.UnitType.Settlers);
+            World[poses[p]].UpdateOwn();
+            poses.RemoveAt(p);
         }
     }
 

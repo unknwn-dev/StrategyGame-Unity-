@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,6 +21,8 @@ public class Settings : ScriptableObject
     public Tile MountainTile;
     [Range(0, 0.3f)]
     public float MounatinChance;
+    [SerializeField]
+    public List<Color> PlayersColors;
 
     [Header("Prefabs")]
     public GameObject UnitsCountPrefab;
