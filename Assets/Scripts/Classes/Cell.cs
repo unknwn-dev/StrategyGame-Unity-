@@ -96,7 +96,6 @@ public class Cell
         {
             if (MScrInst.World.ContainsKey(neighbor) && MScrInst.World[neighbor].IsGround)
             {
-                //MScrInst.MoveFieldTilemap.SetTile(neighbor, MScrInst.Settings.MvUnitFieldTile);
                 result.Add(MScrInst.World[neighbor]);
             }
         }
