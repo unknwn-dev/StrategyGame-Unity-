@@ -71,8 +71,12 @@ public class Settings : ScriptableObject
     [Header("FarmParams")]
     public int FarmHP;
 
+    [Header("Settings")]
+    public string MapsFolder;
+
     private void OnEnable()
     {
         Instance = this;
+        MapsFolder = Application.dataPath + "/Maps";
     }
 }

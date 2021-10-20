@@ -1,5 +1,4 @@
 using UnityEngine.UI;
-
 public class GUIController
 {
     private static readonly MainScript mscr = MainScript.Instance;
