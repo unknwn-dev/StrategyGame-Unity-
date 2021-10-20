@@ -1,4 +1,5 @@
 using UnityEngine.UI;
+using TMPro;
 
 public class GUIController
 {
@@ -6,8 +7,8 @@ public class GUIController
 
     public static void UpdateGui()
     {
-        mscr.GameGui.GetComponentInChildren<Text>().text = $"{mscr.Players[mscr.PlayerStep].PlayerName}\nSteps:{mscr.Steps}";
-        mscr.Money.GetComponentInChildren<Text>().text = mscr.Players[mscr.PlayerStep].Money.ToString();
+        mscr.GameGui.GetComponentInChildren<TMP_Text>().text = $"{mscr.Players[mscr.PlayerStep].PlayerName}\nSteps:{mscr.Steps}";
+        mscr.Money.GetComponentInChildren<TMP_Text>().text = mscr.Players[mscr.PlayerStep].Money.ToString();
         mscr.PlayerColor.GetComponent<Image>().color = mscr.Players[mscr.PlayerStep].PlayerColor;
     }
 }
