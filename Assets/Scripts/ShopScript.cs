@@ -15,6 +15,9 @@ public class ShopScript : MonoBehaviour {
     private GameObject ShopSrcollViewContent;
     [SerializeField]
     private GameObject ButtonPrefab;
+    [SerializeField]
+    private GameObject BlockingPanel;
+
     private Unit.UnitType SelectedType = Unit.UnitType.Null;
 
     public void OpenShop() {
