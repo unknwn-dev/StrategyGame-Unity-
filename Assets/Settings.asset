@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676bb3037ab5bf74083be8bf9481de32, type: 3}
+  m_Name: Settings
+  m_EditorClassIdentifier: 
+  StartMoney: 100
+  BaseTileSprite: {fileID: 21300000, guid: 9b0d5a8bfb9c4f64ba123d40e6f110f3, type: 3}
+  GroundTile: {fileID: 11400000, guid: f3411c1fa79bdf54c921d25da899da0d, type: 2}
+  CastleTile: {fileID: 11400000, guid: d9a1085ab01c0fe4f97bab5d129499c5, type: 2}
+  MvUnitFieldTile: {fileID: 11400000, guid: 31a58bf43338a024c822a4e780229c62, type: 2}
+  FlatMPForMove: 1
+  ForestMPForMove: 2
+  ForestTile: {fileID: 11400000, guid: c0e2ea282749bc44ea654b7bda05da3e, type: 2}
+  ForestChance: 0.15
+  MountainTile: {fileID: 11400000, guid: a6505d10bbe3aa54e9388ac2298443be, type: 2}
+  MounatinChance: 0.1
+  PlayersColors:
+  - {r: 0.9811321, g: 0.83530015, b: 0.0046279924, a: 1}
+  - {r: 0.5660378, g: 0.55125016, b: 0.54200786, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.65882355, b: 0.22006464, a: 1}
+  - {r: 0, g: 0.84313726, b: 0.54588175, a: 1}
+  - {r: 0, g: 0.7141876, b: 1, a: 1}
+  - {r: 0, g: 0.0572505, b: 1, a: 1}
+  - {r: 0.84296924, g: 0.39489147, b: 0.9622642, a: 1}
+  - {r: 1, g: 0, b: 0.5364666, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  UnitsCountPrefab: {fileID: 3791630682131823945, guid: 51a738551640bd841bd6216ec36ad56b, type: 3}
+  UnitsActionButtonPrefab: {fileID: 2340032482234653317, guid: 75821bd5305eec24ca303e26e61e2890, type: 3}
+  PlNamePosOffset: {x: 0, y: 0.4}
+  CameraSpeed: 0.97
+  MaxZoom: 7.4
+  MinZoom: 1.5
+  MaxCamPos: {x: 15, y: 10.2}
+  MinCamPos: {x: -15, y: -10}
+  CitizSpr: {fileID: 21300000, guid: 337b0b0fad0394d4ea939664a9acbf6d, type: 3}
+  CitizenCost: 50
+  CitizenHP: 15
+  CitizenDmg: 5
+  CitizenMaintenanceCost: 3
+  CitizenMP: 5
+  WarriorSpr: {fileID: 21300000, guid: 02d722e743e9d3945a8847d084930b64, type: 3}
+  WarriorCost: 200
+  WarriorHP: 40
+  WarriorDmg: 30
+  WarriorMaintenanceCost: 20
+  WarriorMP: 4
+  SettlersSpr: {fileID: 21300000, guid: b8634120a88e0cc40ad197dc7f632661, type: 3}
+  SettlersCost: 500
+  SettlersHP: 10
+  SettlersMaintenanceCost: 30
+  SettlersMP: 2
+  TerritoryHPBonus: 5
+  CastleHP: 400
+  FarmHP: 0
