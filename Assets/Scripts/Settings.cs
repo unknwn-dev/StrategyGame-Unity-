@@ -39,28 +39,8 @@ public class Settings : ScriptableObject
     public Vector2 MinCamPos;
 
 
-    [Header("CitizenParams")]
-    public Sprite CitizSpr;
-    public int CitizenCost;
-    public int CitizenHP;
-    public int CitizenDmg;
-    public int CitizenMaintenanceCost;
-    public int CitizenMP;
-
-    [Header("WarriorParams")]
-    public Sprite WarriorSpr;
-    public int WarriorCost;
-    public int WarriorHP;
-    public int WarriorDmg;
-    public int WarriorMaintenanceCost;
-    public int WarriorMP;
-
-    [Header("SettlersParams")]
-    public Sprite SettlersSpr;
-    public int SettlersCost;
-    public int SettlersHP;
-    public int SettlersMaintenanceCost;
-    public int SettlersMP;
+    [Header("Units")]
+    public List<Unit> UnitTypes;
 
     [Header("BattleParams")]
     public int TerritoryHPBonus;

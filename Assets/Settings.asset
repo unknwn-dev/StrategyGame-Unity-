@@ -42,23 +42,44 @@ MonoBehaviour:
   MinZoom: 1.5
   MaxCamPos: {x: 15, y: 10.2}
   MinCamPos: {x: -15, y: -10}
-  CitizSpr: {fileID: 21300000, guid: 337b0b0fad0394d4ea939664a9acbf6d, type: 3}
-  CitizenCost: 50
-  CitizenHP: 15
-  CitizenDmg: 5
-  CitizenMaintenanceCost: 3
-  CitizenMP: 5
-  WarriorSpr: {fileID: 21300000, guid: 02d722e743e9d3945a8847d084930b64, type: 3}
-  WarriorCost: 200
-  WarriorHP: 40
-  WarriorDmg: 30
-  WarriorMaintenanceCost: 20
-  WarriorMP: 4
-  SettlersSpr: {fileID: 21300000, guid: b8634120a88e0cc40ad197dc7f632661, type: 3}
-  SettlersCost: 500
-  SettlersHP: 10
-  SettlersMaintenanceCost: 30
-  SettlersMP: 2
+  UnitTypes:
+  - Owner:
+      PlayerName: 
+      PlayerColor: {r: 0, g: 0, b: 0, a: 0}
+      PlayerTile: {fileID: 0}
+      Money: 0
+    UnitTile: {fileID: 11400000, guid: 18fd4e1b3284d684aa9e9f35e5f443f4, type: 2}
+    Type: 0
+    HP: 10
+    Damage: 5
+    MaintenanceCost: 20
+    MovePoints: 2
+    BuyCost: 50
+  - Owner:
+      PlayerName: 
+      PlayerColor: {r: 0, g: 0, b: 0, a: 0}
+      PlayerTile: {fileID: 0}
+      Money: 0
+    UnitTile: {fileID: 11400000, guid: 6a75132d8826f6242b2b4df8691cd624, type: 2}
+    Type: 1
+    HP: 50
+    Damage: 20
+    MaintenanceCost: 50
+    MovePoints: 2
+    BuyCost: 200
+  - Owner:
+      PlayerName: 
+      PlayerColor: {r: 0, g: 0, b: 0, a: 0}
+      PlayerTile: {fileID: 0}
+      Money: 0
+    UnitTile: {fileID: 11400000, guid: 5e933448efa57a64783fe08f2aa7d459, type: 2}
+    Type: 2
+    HP: 10
+    Damage: 0
+    MaintenanceCost: 60
+    MovePoints: 2
+    BuyCost: 500
   TerritoryHPBonus: 5
   CastleHP: 400
   FarmHP: 0
+  MapsFolder: D:/projects/StrategyGame/Assets/Maps

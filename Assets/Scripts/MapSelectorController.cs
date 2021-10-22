@@ -3,8 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
-public class MapSelectorController : MonoBehaviour
-{
+public class MapSelectorController : MonoBehaviour {
 
     private void OnEnable() {
 
@@ -22,7 +21,7 @@ public class MapSelectorController : MonoBehaviour
             dropDData.Add(new TMP_Dropdown.OptionData(MenuController.Instance.Maps[i].Replace(Application.dataPath + "/Maps\\", "")));
         }
 
-        if(dropDData != null)
+        if (dropDData != null)
             gameObject.GetComponent<TMP_Dropdown>().AddOptions(dropDData);
     }
 }

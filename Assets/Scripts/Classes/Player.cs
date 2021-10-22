@@ -8,7 +8,7 @@ public class Player
     public string PlayerName;
     public Color PlayerColor;
     [HideInInspector]
-    public Tile PlayerTile = new Tile();
+    public Tile PlayerTile = (Tile)Tile.CreateInstance(typeof(Tile));
     public int Money;
 
     public Player(string name, Color color)
@@ -24,7 +24,6 @@ public class Player
         foreach(var cell in PlayerCells)
         {
             Money += (int)cell.Rec.Income;
-            cell.Rec.MakeStep();
         }
 
         foreach (var unit in PlayerUnits)

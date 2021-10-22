@@ -617,7 +617,6 @@ GameObject:
   m_Component:
   - component: {fileID: 267103297}
   - component: {fileID: 267103296}
-  - component: {fileID: 267103298}
   m_Layer: 0
   m_Name: controller
   m_TagString: Untagged
@@ -665,21 +664,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &267103298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 267103295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39c5226a176c82940a05e85b06b1fcc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShopIsOpened: 0
-  IsBuying: 0
-  ShopPanel: {fileID: 826375182}
 --- !u!1 &321045373
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,8 +959,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 647232148}
   m_HandleRect: {fileID: 647232147}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5212,6 +5196,7 @@ GameObject:
   - component: {fileID: 967484915}
   - component: {fileID: 967484917}
   - component: {fileID: 967484916}
+  - component: {fileID: 967484918}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -5257,7 +5242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5281,6 +5266,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 967484914}
   m_CullTransparentMesh: 1
+--- !u!114 &967484918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967484914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39c5226a176c82940a05e85b06b1fcc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShopIsOpened: 0
+  IsBuying: 0
+  ShopPanel: {fileID: 826375182}
+  ShopSrcollViewContent: {fileID: 1648475916}
+  ButtonPrefab: {fileID: 4037066023758745075, guid: f951fb784a2ea104891c016dcadc8091, type: 3}
 --- !u!1 &977371378
 GameObject:
   m_ObjectHideFlags: 0
@@ -6631,7 +6633,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 0
+  m_Spacing: 14.35
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -6954,7 +6956,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 267103298}
+      - m_Target: {fileID: 967484918}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
         m_MethodName: OpenShop
         m_Mode: 1
