@@ -5,7 +5,7 @@ public class CameraController : MonoBehaviour
     void Update()
     {
 
-        Settings sett = MainScript.Instance.Settings;
+        Settings sett = Settings.Instance;
 
         Vector3 mouseAxis = new Vector3();
         if (Input.GetMouseButton(1))
