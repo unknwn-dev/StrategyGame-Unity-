@@ -17,22 +17,22 @@ public class Recources {
 
         if (type == CellType.Flat) {
             Income = 1;
-            MPForMove = MainScript.Instance.Settings.FlatMPForMove;
+            MPForMove = GameController.Instance.Settings.FlatMPForMove;
         }
         else if (type == CellType.River) {
             Income = 2;
         }
         else if (type == CellType.Forest) {
             Income = 2;
-            MPForMove = MainScript.Instance.Settings.ForestMPForMove;
+            MPForMove = GameController.Instance.Settings.ForestMPForMove;
         }
     }
 
     public static CellType GetRandomCellType() {
         float random = Random.Range(0.01f, 1);
 
-        if (random <= MainScript.Instance.Settings.ForestChance) return CellType.Forest;
-        else if (random > MainScript.Instance.Settings.ForestChance && random <= MainScript.Instance.Settings.MounatinChance) return CellType.Mountain;
+        if (random <= GameController.Instance.Settings.ForestChance) return CellType.Forest;
+        else if (random > GameController.Instance.Settings.ForestChance && random <= GameController.Instance.Settings.MounatinChance) return CellType.Mountain;
         else return CellType.Flat;
     }
 }

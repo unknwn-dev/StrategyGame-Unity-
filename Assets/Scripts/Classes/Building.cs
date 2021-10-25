@@ -18,7 +18,7 @@ public class Building
         Type = type;
         Owner = pl;
 
-        if (type == BuildType.Castle) HP = MainScript.Instance.Settings.CastleHP;
-        else if (type == BuildType.Farm) HP = MainScript.Instance.Settings.FarmHP;
+        if (type == BuildType.Castle) HP = GameController.Instance.Settings.CastleHP;
+        else if (type == BuildType.Farm) HP = GameController.Instance.Settings.FarmHP;
     }
 }

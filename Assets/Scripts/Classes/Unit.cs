@@ -28,7 +28,7 @@ public class Unit {
         Owner = own;
         Type = type;
 
-        Settings sett = MainScript.Instance.Settings;
+        Settings sett = GameController.Instance.Settings;
         HP = sett.UnitTypes[(int)type].HP;
         Damage = sett.UnitTypes[(int)type].Damage;
         UnitTile.sprite = sett.UnitTypes[(int)type].UnitTile.sprite;
@@ -45,7 +45,7 @@ public class Unit {
     }
 
     public void MPToMax() {
-        Settings sett = MainScript.Instance.Settings;
+        Settings sett = GameController.Instance.Settings;
         MovePoints = sett.UnitTypes[(int)Type].MovePoints;
     }
 
@@ -54,15 +54,14 @@ public class Unit {
         cell.Units = null;
         cell.UpdateOwn();
 
-        MainScript MSC = MainScript.Instance;
+        GameController MSC = GameController.Instance;
 
         MSC.CellModsTilemap.SetTile(cell.CellPos, MSC.Settings.CastleTile);
 
+        cell.Owner = Owner;
+        cell.UpdateOwn();
+
         foreach (var neighbor in cell.Neighbors()) {
-            if (cell.Owner == null) {
-                cell.Owner = Owner;
-                cell.UpdateOwn();
-            }
             if (MSC.World[neighbor].Owner == null && MSC.World[neighbor].IsGround) {
                 MSC.World[neighbor].Owner = Owner;
                 MSC.World[neighbor].UpdateOwn();
@@ -74,8 +73,8 @@ public class Unit {
 
     public void MoveThroughtPath() {
         while (MovePoints > 0) {
-            if (MovementPath != null && MovementPath.Count > 0) {
-                MovementPath[0].AddUnits(CurrentCell);
+            if (MovementPath != null && MovementPath.Count > 1 && MovementPath[1].Building == null && MovementPath[1].Units == null) {
+                MovementPath[1].AddUnits(CurrentCell);
                 MovementPath.Remove(CurrentCell);
                 MovePoints -= CurrentCell.Rec.MPForMove;
             }

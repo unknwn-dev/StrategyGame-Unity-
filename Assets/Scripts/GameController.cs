@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class MainScript : MonoBehaviour {
-    public static MainScript Instance;
+public class GameController : MonoBehaviour {
+    public static GameController Instance;
     public Settings Settings;
     public Tilemap GroundTilemap;
     public Tilemap CellModsTilemap;
@@ -20,7 +20,7 @@ public class MainScript : MonoBehaviour {
     public List<Player> Players;
     [SerializeField]
     public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
-    public int PlayerStep = -1;
+    public int PlayerStep;
     public Cell SelectedCell;
     public List<Cell> SelectedCellNeighbors = new List<Cell>();
     public int Steps;
@@ -30,8 +30,11 @@ public class MainScript : MonoBehaviour {
 
 
     void Start() {
-        Instance = this;
-
+        if(Instance == null)
+            Instance = this;
+        else if(Instance != this) {
+            Destroy(gameObject);
+        }
         List<Color> plCols = new List<Color>(Settings.Instance.PlayersColors);
 
         for (int i = 0; i < MenuController.PlayersCount; i++) {
@@ -65,10 +68,10 @@ public class MainScript : MonoBehaviour {
                 World.Add(pos, creatingCell);
 
                 if (rec.Type == Recources.CellType.Forest && creatingCell.IsGround) {
-                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.ForestTile);
+                    CellModsTilemap.SetTile(pos, GameController.Instance.Settings.ForestTile);
                 }
                 else if (rec.Type == Recources.CellType.Mountain && creatingCell.IsGround) {
-                    CellModsTilemap.SetTile(pos, MainScript.Instance.Settings.MountainTile);
+                    CellModsTilemap.SetTile(pos, GameController.Instance.Settings.MountainTile);
                 }
             }
         }

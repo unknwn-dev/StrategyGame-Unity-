@@ -45,7 +45,7 @@ public class UnitsActionScript : MonoBehaviour
         else if (cell.Units.Type == Unit.UnitType.Settlers)
         {
             ActButtons.Add(CreateButtonInstance(ActTypes.DeleteUnit));
-            ActButtons.Add(CreateButtonInstance(ActTypes.BuildCity));
+            ActButtons.Add(CreateButtonInstance(ActTypes.BuildCity, cell.Building == null));
         }
     }
 
@@ -61,11 +61,11 @@ public class UnitsActionScript : MonoBehaviour
             gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Rec.Type}\nIncome:{SelectedCell.Rec.Income}");
     }
 
-    public GameObject CreateButtonInstance(ActTypes type)
+    public GameObject CreateButtonInstance(ActTypes type, bool buildIsActive = false)
     {
-        GameObject Button = Instantiate(MainScript.Instance.Settings.UnitsActionButtonPrefab, ButtonsPanel.transform);
+        GameObject Button = Instantiate(GameController.Instance.Settings.UnitsActionButtonPrefab, ButtonsPanel.transform);
 
-        if (type == ActTypes.BuildCity)
+        if (type == ActTypes.BuildCity && buildIsActive)
         {
             Button.GetComponent<Button>().onClick.AddListener(OnBuildCityPressed);
             Button.GetComponentInChildren<TextMeshProUGUI>().SetText("Build\nCity");
@@ -88,7 +88,7 @@ public class UnitsActionScript : MonoBehaviour
             Destroy(gO);
         }
 
-        MainScript.Instance.IsCanMove = false;
+        GameController.Instance.IsCanMove = false;
         ActButtons = new List<GameObject>();
 
         gameObject.SetActive(false);
@@ -96,25 +96,25 @@ public class UnitsActionScript : MonoBehaviour
 
     public void OnMoveUnitPressed()
     {
-        MainScript.Instance.IsCanMove = true;
+        GameController.Instance.IsCanMove = true;
         gameObject.SetActive(false);
     }
 
     public void OnBuildCityPressed()
     {
         SelectedCell.Units.BuildCity(SelectedCell);
-        MainScript.Instance.SelectedCell = null;
+        GameController.Instance.SelectedCell = null;
         CloseMenu();
-        MainScript.Instance.ClearMoveFieldTilemap();
+        GameController.Instance.ClearMoveFieldTilemap();
     }
 
     public void OnDeleteUnitPressed()
     {
         SelectedCell.Units = null;
-        MainScript.Instance.SelectedCell = null;
+        GameController.Instance.SelectedCell = null;
         SelectedCell.UpdateOwn();
         CloseMenu();
-        MainScript.Instance.ClearMoveFieldTilemap();
+        GameController.Instance.ClearMoveFieldTilemap();
     }
 
 }

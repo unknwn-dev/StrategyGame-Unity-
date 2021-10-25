@@ -49,15 +49,15 @@ public class ShopScript : MonoBehaviour {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             if (Input.GetMouseButtonDown(0)) {
-                Vector3Int ClickedCell = MainScript.Instance.GroundTilemap.WorldToCell(mousePos);
+                Vector3Int ClickedCell = GameController.Instance.GroundTilemap.WorldToCell(mousePos);
                 ClickedCell.z = 0;
 
-                Dictionary<Vector3Int, Cell> World = MainScript.Instance.World;
+                Dictionary<Vector3Int, Cell> World = GameController.Instance.World;
 
-                Player MovingPlayer = MainScript.Instance.Players[MainScript.Instance.PlayerStep];
+                Player MovingPlayer = GameController.Instance.Players[GameController.Instance.PlayerStep];
 
                 if (World[ClickedCell].Units == null && World[ClickedCell].Owner == MovingPlayer) {
-                    MainScript.Instance.Players[MainScript.Instance.PlayerStep].Money -= MainScript.Instance.Settings.UnitTypes[(int)SelectedType].BuyCost;
+                    GameController.Instance.Players[GameController.Instance.PlayerStep].Money -= GameController.Instance.Settings.UnitTypes[(int)SelectedType].BuyCost;
                     World[ClickedCell].Units = new Unit(MovingPlayer, SelectedType);
                     World[ClickedCell].UpdateOwn();
                     SelectedType = Unit.UnitType.Null;

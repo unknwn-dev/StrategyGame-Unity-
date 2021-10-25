@@ -1156,7 +1156,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 267103295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f2d2a338947a2e4994c1f589ebe57ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 702824e0dfa11d74282b992889383dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Settings: {fileID: 11400000, guid: 5a79ae0af19203a42a871b5a451b5dd3, type: 2}
@@ -1164,8 +1164,8 @@ MonoBehaviour:
   CellModsTilemap: {fileID: 75557092}
   UnitsTilemap: {fileID: 588871492}
   MoveFieldTilemap: {fileID: 1606466464}
-  MainCanvas: {fileID: 1791418558}
-  GameGui: {fileID: 254276974}
+  MainCanvas: {fileID: 1160896153}
+  GameGui: {fileID: 2045249528}
   PlayerColor: {fileID: 365940169}
   Money: {fileID: 146609865}
   ActionsPanel: {fileID: 977371378}

@@ -77,7 +77,7 @@ public class Cell {
 
     public List<Cell> GetNeighborCells() {
         List<Cell> result = new List<Cell>();
-        MainScript MScrInst = MainScript.Instance;
+        GameController MScrInst = GameController.Instance;
 
         foreach (var neighbor in Neighbors()) {
             if (MScrInst.World.ContainsKey(neighbor) && MScrInst.World[neighbor].IsGround) {
@@ -89,21 +89,21 @@ public class Cell {
 
     public void UpdateOwn() {
         if (Units != null && Owner == null) {
-            MainScript.Instance.UnitsTilemap.SetTile(CellPos, Units.UnitTile);
+            GameController.Instance.UnitsTilemap.SetTile(CellPos, Units.UnitTile);
         }
         else if (Units != null && Owner != null) {
-            MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
+            GameController.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
 
-            MainScript.Instance.UnitsTilemap.SetTile(CellPos, Units.UnitTile);
+            GameController.Instance.UnitsTilemap.SetTile(CellPos, Units.UnitTile);
         }
         else if (Owner != null) {
-            MainScript.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
-            MainScript.Instance.UnitsTilemap.SetTile(CellPos, null);
+            GameController.Instance.GroundTilemap.SetTile(CellPos, Owner.PlayerTile);
+            GameController.Instance.UnitsTilemap.SetTile(CellPos, null);
         }
         else {
 
-            MainScript.Instance.GroundTilemap.SetTile(CellPos, MainScript.Instance.Settings.GroundTile);
-            MainScript.Instance.UnitsTilemap.SetTile(CellPos, null);
+            GameController.Instance.GroundTilemap.SetTile(CellPos, GameController.Instance.Settings.GroundTile);
+            GameController.Instance.UnitsTilemap.SetTile(CellPos, null);
         }
     }
 
@@ -124,8 +124,8 @@ public class Cell {
                 Owner = OtherCell.Units.Owner;
                 Building = null;
                 foreach (var neighbor in Neighbors()) {
-                    MainScript.Instance.World[neighbor].Owner = null;
-                    MainScript.Instance.World[neighbor].UpdateOwn();
+                    GameController.Instance.World[neighbor].Owner = null;
+                    GameController.Instance.World[neighbor].UpdateOwn();
                 }
                 Units.BuildCity(this);
             }
@@ -147,7 +147,7 @@ public class Cell {
 
 
         if (IsUnitOnHisCell) {
-            ResultHP = (Units.HP + MainScript.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
+            ResultHP = (Units.HP + GameController.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
             OthCellResultHP = OtherCell.Units.HP - Mathf.RoundToInt(Units.Damage * 0.7f);
         }
         else {

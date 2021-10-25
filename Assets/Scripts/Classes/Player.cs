@@ -14,7 +14,7 @@ public class Player
     public Player(string name, Color color)
     {
         PlayerName = name;
-        PlayerTile.sprite = MainScript.Instance.Settings.BaseTileSprite;
+        PlayerTile.sprite = GameController.Instance.Settings.BaseTileSprite;
         PlayerTile.color = color;
         PlayerColor = color;
     }
