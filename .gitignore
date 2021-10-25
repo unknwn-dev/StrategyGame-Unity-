@@ -72,5 +72,3 @@ crashlytics-build.properties
 /PCBuild.zip
 /Assets/Maps
 /Assets/Saves
-/Assets/*.meta
-*.meta
