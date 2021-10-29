@@ -145,7 +145,7 @@ public class Cell {
 
         if (Building != null && Building.Type == Building.BuildType.Castle && Owner != OtherCell.Units.Owner && OtherCell.Units.MovePoints > 0) {
             Building.HP -= OtherCell.Units.Damage;
-            OtherCell.Rec.MPForMove = 0;
+            OtherCell.Units.MovePoints = 0;
             if (Building.HP <= 0) {
                 Owner = OtherCell.Units.Owner;
                 Building = null;
@@ -157,8 +157,49 @@ public class Cell {
             }
             return;
         }
+        else if(Units != null){
 
-        if (Units == null) {
+            bool IsUnitOnHisCell = Units.Owner == Owner;
+
+            int ResultHP, OthCellResultHP;
+
+
+            if (IsUnitOnHisCell) {
+                ResultHP = (Units.HP + GameController.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
+                OthCellResultHP = OtherCell.Units.HP - Mathf.RoundToInt(Units.Damage * 0.7f);
+            }
+            else {
+                ResultHP = Units.HP - OtherCell.Units.Damage;
+                OthCellResultHP = OtherCell.Units.HP - Units.Damage;
+            }
+
+            if (ResultHP > 0 && OthCellResultHP > 0) {
+                Units.HP = ResultHP;
+                OtherCell.Units.HP = OthCellResultHP;
+                OtherCell.Rec.MPForMove = 0;
+            }
+            else if (ResultHP <= 0 && OthCellResultHP > 0) {
+                OtherCell.Rec.MPForMove = 0;
+                Units = OtherCell.Units;
+                OtherCell.Units = null;
+                Units.HP = OthCellResultHP;
+                Units.CurrentCell = this;
+            }
+            else if (ResultHP > 0 && OthCellResultHP <= 0) {
+                OtherCell.Units = null;
+                Units.HP = ResultHP;
+            }
+
+            else if (ResultHP <= 0 && OthCellResultHP <= 0) {
+                OtherCell.Units = null;
+                Units = null;
+            }
+
+
+            OtherCell.UpdateOwn();
+            UpdateOwn();
+        }
+        else if (Units == null) {
             Units = OtherCell.Units;
             OtherCell.Units = null;
             OtherCell.UpdateOwn();
@@ -166,45 +207,5 @@ public class Cell {
             Units.CurrentCell = this;
             return;
         }
-
-        bool IsUnitOnHisCell = Units.Owner == Owner;
-
-        int ResultHP, OthCellResultHP;
-
-
-        if (IsUnitOnHisCell) {
-            ResultHP = (Units.HP + GameController.Instance.Settings.TerritoryHPBonus) - OtherCell.Units.Damage;
-            OthCellResultHP = OtherCell.Units.HP - Mathf.RoundToInt(Units.Damage * 0.7f);
-        }
-        else {
-            ResultHP = Units.HP - OtherCell.Units.Damage;
-            OthCellResultHP = OtherCell.Units.HP - Units.Damage;
-        }
-
-        if (ResultHP > 0 && OthCellResultHP > 0) {
-            Units.HP = ResultHP;
-            OtherCell.Units.HP = OthCellResultHP;
-            OtherCell.Rec.MPForMove = 0;
-        }
-        else if (ResultHP <= 0 && OthCellResultHP > 0) {
-            OtherCell.Rec.MPForMove = 0;
-            Units = OtherCell.Units;
-            OtherCell.Units = null;
-            Units.HP = OthCellResultHP;
-            Units.CurrentCell = this;
-        }
-        else if (ResultHP > 0 && OthCellResultHP <= 0) {
-            OtherCell.Units = null;
-            Units.HP = ResultHP;
-        }
-
-        else if (ResultHP <= 0 && OthCellResultHP <= 0) {
-            OtherCell.Units = null;
-            Units = null;
-        }
-
-
-        OtherCell.UpdateOwn();
-        UpdateOwn();
     }
 }

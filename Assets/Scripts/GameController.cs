@@ -149,18 +149,12 @@ public class GameController : MonoBehaviour {
 
             else if (SelectedCell != null && ClickedCell.IsGround) {
                 ClearMoveFieldTilemap();
-
-                if (ClickedCell.Units == null) {
-                    SelectedCell.Units.MovementPath = PathFinder.Find(SelectedCell, ClickedCell);
+                SelectedCell.Units.MovementPath = PathFinder.Find(SelectedCell, ClickedCell);
 
 
-                    foreach (var cell in SelectedCell.Units.MovementPath) {
-                        if (cell != null)
-                            MoveFieldTilemap.SetTile(cell, Settings.MvUnitFieldTile);
-                    }
-                }
-                else {
-                    SelectedCell.AddUnits(ClickedCell);
+                foreach (var cell in SelectedCell.Units.MovementPath) {
+                    if (cell != null)
+                        MoveFieldTilemap.SetTile(cell, Settings.MvUnitFieldTile);
                 }
             }
 

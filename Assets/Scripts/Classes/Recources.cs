@@ -32,7 +32,7 @@ public class Recources {
     public Recources() {
         Type = 0;
         Income = 0;
-        MPForMove = 0;
+        MPForMove = 1;
     }
 
     public static CellType GetRandomCellType() {

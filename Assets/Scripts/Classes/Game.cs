@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -47,16 +48,9 @@ public class Game
             loaded = (SerializibleGame)binaryFormatter.Deserialize(stream);
         }
 
-        Game gameCopy = loaded.WriteToGame();
-
-        World = gameCopy.World;
-        Players = gameCopy.Players;
-        PlayerStep = gameCopy.PlayerStep;
-        Steps = gameCopy.Steps;
-
-        IsLoaded = true;
-
-        UpdateGame();
+        Settings.Game = loaded.WriteToGame();
+        Settings.Game.IsLoaded = true;
+        Settings.Game.UpdateGame();
     }
 
     private void UpdateGame() {

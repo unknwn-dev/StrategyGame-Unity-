@@ -80,6 +80,8 @@ public class PathFinder {
             pathPoses.Add(c.CellPos);
         }
 
+        pathPoses.Remove(pathPoses[0]);
+
         return pathPoses;
     }
 }

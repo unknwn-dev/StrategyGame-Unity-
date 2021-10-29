@@ -54,8 +54,8 @@ public class Unit {
 
     public void MoveThroughtPath() {
         while (MovePoints > 0) {
-            if (MovementPath != null && MovementPath.Count > 1 && Settings.Game.World[MovementPath[1]].Building == null && Settings.Game.World[MovementPath[1]].Units == null) {
-                Settings.Game.World[MovementPath[1]].AddUnits(CurrentCell);
+            if (MovementPath != null && MovementPath.Count > 0) {
+                Settings.Game.World[MovementPath[0]].AddUnits(CurrentCell);
                 MovementPath.Remove(MovementPath[0]);
                 MovePoints -= CurrentCell.Rec.MPForMove;
             }
