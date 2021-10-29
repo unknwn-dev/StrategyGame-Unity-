@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
 
-[System.Serializable]
 public class Player
 {
     public string PlayerName;
@@ -10,13 +9,15 @@ public class Player
     [HideInInspector]
     public Tile PlayerTile = (Tile)Tile.CreateInstance(typeof(Tile));
     public int Money;
+    public int ID;
 
     public Player(string name, Color color)
     {
         PlayerName = name;
-        PlayerTile.sprite = GameController.Instance.Settings.BaseTileSprite;
+        PlayerTile.sprite = Settings.Instance.BaseTileSprite;
         PlayerTile.color = color;
         PlayerColor = color;
+        ID = Random.Range(0,9999999);
     }
 
     public void MakeStep(List<Cell> PlayerCells, List<Unit> PlayerUnits)

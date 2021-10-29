@@ -7,7 +7,7 @@ public class PathFinder {
         return Mathf.Max(Mathf.Max(Mathf.Abs(startPosition.x - targetPosition.x), Mathf.Abs(startPosition.y - targetPosition.y), Mathf.Abs(startPosition.z - targetPosition.z)));
     }
 
-    public static List<Cell> Find(Cell from, Cell to) {
+    public static List<Vector3Int> Find(Cell from, Cell to) {
         List<Cell> opened = new List<Cell>();
         List<Cell> closed = new List<Cell>();
 
@@ -74,6 +74,12 @@ public class PathFinder {
             finalPathTiles.Reverse();
         }
 
-        return finalPathTiles;
+        List<Vector3Int> pathPoses = new List<Vector3Int>();
+
+        foreach(var c in finalPathTiles) {
+            pathPoses.Add(c.CellPos);
+        }
+
+        return pathPoses;
     }
 }

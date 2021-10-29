@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[System.Serializable]
 public class Recources {
     public enum CellType {
         Flat = 0,
@@ -26,6 +27,12 @@ public class Recources {
             Income = 2;
             MPForMove = GameController.Instance.Settings.ForestMPForMove;
         }
+    }
+
+    public Recources() {
+        Type = 0;
+        Income = 0;
+        MPForMove = 0;
     }
 
     public static CellType GetRandomCellType() {

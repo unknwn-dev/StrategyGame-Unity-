@@ -102,7 +102,7 @@ public class UnitsActionScript : MonoBehaviour
 
     public void OnBuildCityPressed()
     {
-        SelectedCell.Units.BuildCity(SelectedCell);
+        SelectedCell.BuildCity();
         GameController.Instance.SelectedCell = null;
         CloseMenu();
         GameController.Instance.ClearMoveFieldTilemap();

@@ -77,14 +77,33 @@ public class Cell {
 
     public List<Cell> GetNeighborCells() {
         List<Cell> result = new List<Cell>();
-        GameController MScrInst = GameController.Instance;
 
         foreach (var neighbor in Neighbors()) {
-            if (MScrInst.World.ContainsKey(neighbor) && MScrInst.World[neighbor].IsGround) {
-                result.Add(MScrInst.World[neighbor]);
+            if (Settings.Game.World.ContainsKey(neighbor) && Settings.Game.World[neighbor].IsGround) {
+                result.Add(Settings.Game.World[neighbor]);
             }
         }
         return result;
+    }
+
+    public void BuildCity() {
+        Building = new Building(Building.BuildType.Castle);
+        if(Units != null)Owner = Units.Owner;
+        Units = null;
+        UpdateOwn();
+
+        GameController MSC = GameController.Instance;
+
+        MSC.CellModsTilemap.SetTile(CellPos, MSC.Settings.CastleTile);
+
+        foreach (var neighbor in Neighbors()) {
+            if (Settings.Game.World[neighbor].Owner == null && Settings.Game.World[neighbor].IsGround) {
+                Settings.Game.World[neighbor].Owner = Owner;
+                Settings.Game.World[neighbor].UpdateOwn();
+            }
+        }
+
+        MSC.ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
     }
 
     public void UpdateOwn() {
@@ -114,20 +133,27 @@ public class Cell {
         Rec = recources;
     }
 
+    public Cell() {
+        Units = null;
+        CellPos = new Vector3Int();
+        IsGround = false;
+        Rec = new Recources();
+    }
+
     public void AddUnits(Cell OtherCell) {
         if (OtherCell.Units.MovePoints <= 0) return;
 
-        if (Building != null && Building.Type == Building.BuildType.Castle && Building.Owner != OtherCell.Units.Owner && OtherCell.Units.MovePoints > 0) {
+        if (Building != null && Building.Type == Building.BuildType.Castle && Owner != OtherCell.Units.Owner && OtherCell.Units.MovePoints > 0) {
             Building.HP -= OtherCell.Units.Damage;
             OtherCell.Rec.MPForMove = 0;
             if (Building.HP <= 0) {
                 Owner = OtherCell.Units.Owner;
                 Building = null;
                 foreach (var neighbor in Neighbors()) {
-                    GameController.Instance.World[neighbor].Owner = null;
-                    GameController.Instance.World[neighbor].UpdateOwn();
+                    Settings.Game.World[neighbor].Owner = null;
+                    Settings.Game.World[neighbor].UpdateOwn();
                 }
-                Units.BuildCity(this);
+                BuildCity();
             }
             return;
         }

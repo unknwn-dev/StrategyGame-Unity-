@@ -7,6 +7,8 @@ public class Settings : ScriptableObject
 {
     public static Settings Instance;
 
+    public static Game Game = new Game();
+
     [Header("World Settings")]
     public int StartMoney;
     public Sprite BaseTileSprite;
@@ -53,10 +55,20 @@ public class Settings : ScriptableObject
 
     [Header("Settings")]
     public string MapsFolder;
+    public string SaveFolder;
+    [HideInInspector]
+    public string[] Saves;
+    [HideInInspector]
+    public string[] Maps;
 
     private void OnEnable()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this) {
+            Destroy(this);
+        }
         MapsFolder = Application.dataPath + "/Maps";
+        SaveFolder = Application.dataPath + "/Saves";
     }
 }

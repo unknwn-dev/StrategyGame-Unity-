@@ -52,12 +52,12 @@ public class ShopScript : MonoBehaviour {
                 Vector3Int ClickedCell = GameController.Instance.GroundTilemap.WorldToCell(mousePos);
                 ClickedCell.z = 0;
 
-                Dictionary<Vector3Int, Cell> World = GameController.Instance.World;
+                Dictionary<Vector3Int, Cell> World = Settings.Game.World;
 
-                Player MovingPlayer = GameController.Instance.Players[GameController.Instance.PlayerStep];
+                Player MovingPlayer = Settings.Game.Players[Settings.Game.PlayerStep];
 
                 if (World[ClickedCell].Units == null && World[ClickedCell].Owner == MovingPlayer) {
-                    GameController.Instance.Players[GameController.Instance.PlayerStep].Money -= GameController.Instance.Settings.UnitTypes[(int)SelectedType].BuyCost;
+                    Settings.Game.Players[Settings.Game.PlayerStep].Money -= GameController.Instance.Settings.UnitTypes[(int)SelectedType].BuyCost;
                     World[ClickedCell].Units = new Unit(MovingPlayer, SelectedType);
                     World[ClickedCell].UpdateOwn();
                     SelectedType = Unit.UnitType.Null;

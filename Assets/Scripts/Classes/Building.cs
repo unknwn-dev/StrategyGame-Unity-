@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+[System.Serializable]
 public class Building
 {
     public enum BuildType
@@ -10,13 +11,10 @@ public class Building
 
     public BuildType Type;
     public int HP;
-    public Player Owner;
-    public List<Cell> Territories;
 
-    public Building(BuildType type, Player pl)
+    public Building(BuildType type)
     {
         Type = type;
-        Owner = pl;
 
         if (type == BuildType.Castle) HP = GameController.Instance.Settings.CastleHP;
         else if (type == BuildType.Farm) HP = GameController.Instance.Settings.FarmHP;

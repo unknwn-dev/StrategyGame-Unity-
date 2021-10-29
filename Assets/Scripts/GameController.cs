@@ -17,38 +17,41 @@ public class GameController : MonoBehaviour {
     public GameObject ActionsPanel;
     public bool IsCanMove;
 
-    public List<Player> Players;
-    [SerializeField]
-    public Dictionary<Vector3Int, Cell> World = new Dictionary<Vector3Int, Cell>();
-    public int PlayerStep;
     public Cell SelectedCell;
     public List<Cell> SelectedCellNeighbors = new List<Cell>();
-    public int Steps;
 
     private BoundsInt bounds;
     private bool IsInfoPanelOpened;
 
 
     void Start() {
-        if(Instance == null)
+        if (Instance == null)
             Instance = this;
-        else if(Instance != this) {
+        else if (Instance != this) {
             Destroy(gameObject);
         }
-        List<Color> plCols = new List<Color>(Settings.Instance.PlayersColors);
 
-        for (int i = 0; i < MenuController.PlayersCount; i++) {
-            int randCol = Random.Range(0, plCols.Count - 1);
-            Players.Add(new Player("p" + i, plCols[randCol]));
-            plCols.Remove(plCols[randCol]);
+        if (!Settings.Game.IsLoaded) {
+            GeneratePlayers();
+            InitMap();
         }
-
-        InitMap();
+        else {
+            Settings.Game.LoadGame(Settings.Game.SaveName);
+        }
     }
 
     void Update() {
         MoveUnit();
         GUIController.UpdateGui();
+    }
+
+    public void GeneratePlayers() {
+        List<Color> plCols = new List<Color>(Settings.Instance.PlayersColors);
+        for (int i = 0; i < MenuController.PlayersCount; i++) {
+            int randCol = Random.Range(0, plCols.Count - 1);
+            Settings.Game.Players.Add(new Player("p" + i, plCols[randCol]));
+            plCols.Remove(plCols[randCol]);
+        }
     }
 
     public void OnInfoClick() {
@@ -65,7 +68,7 @@ public class GameController : MonoBehaviour {
 
                 Cell creatingCell = new Cell(null, pos, GroundTilemap.HasTile(pos), rec);
 
-                World.Add(pos, creatingCell);
+                Settings.Game.World.Add(pos, creatingCell);
 
                 if (rec.Type == Recources.CellType.Forest && creatingCell.IsGround) {
                     CellModsTilemap.SetTile(pos, GameController.Instance.Settings.ForestTile);
@@ -77,15 +80,15 @@ public class GameController : MonoBehaviour {
         }
 
         List<Vector3Int> poses = new List<Vector3Int>();
-        foreach (var wp in World) {
+        foreach (var wp in Settings.Game.World) {
             if (wp.Value.IsGround) poses.Add(wp.Key);
         }
 
-        foreach (var pl in Players) {
+        foreach (var pl in Settings.Game.Players) {
             pl.Money = Settings.StartMoney;
             int p = Random.Range(0, poses.Count);
-            World[poses[p]].Units = new Unit(pl, Unit.UnitType.Settlers);
-            World[poses[p]].UpdateOwn();
+            Settings.Game.World[poses[p]].Units = new Unit(pl, Unit.UnitType.Settlers);
+            Settings.Game.World[poses[p]].UpdateOwn();
             poses.RemoveAt(p);
         }
     }
@@ -99,12 +102,12 @@ public class GameController : MonoBehaviour {
 
             Cell ClickedCell;
 
-            if (World.ContainsKey(ClickedCellPos))
-                ClickedCell = World[ClickedCellPos];
+            if (Settings.Game.World.ContainsKey(ClickedCellPos))
+                ClickedCell = Settings.Game.World[ClickedCellPos];
             else
                 return;
 
-            if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Players[PlayerStep]) {
+            if (SelectedCell == null && ClickedCell.Units != null && ClickedCell.Units.Owner == Settings.Game.Players[Settings.Game.PlayerStep]) {
                 SelectedCell = ClickedCell;
 
 
@@ -113,7 +116,7 @@ public class GameController : MonoBehaviour {
                 if (SelectedCell.Units.MovementPath.Count > 0) {
                     foreach (var cell in SelectedCell.Units.MovementPath) {
                         if (cell != null)
-                            MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                            MoveFieldTilemap.SetTile(cell, Settings.MvUnitFieldTile);
                     }
                 }
                 else {
@@ -134,7 +137,7 @@ public class GameController : MonoBehaviour {
                 ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
             }
 
-            else if (SelectedCell != null && SelectedCell.Units.MovementPath.Count > 0 && SelectedCell.Units.MovementPath[SelectedCell.Units.MovementPath.Count - 1] == ClickedCell) {
+            else if (SelectedCell != null && SelectedCell.Units.MovementPath.Count > 0 && Settings.Game.World[SelectedCell.Units.MovementPath[SelectedCell.Units.MovementPath.Count - 1]] == ClickedCell) {
                 SelectedCell.Units.MoveThroughtPath();
 
                 SelectedCell = null;
@@ -153,7 +156,7 @@ public class GameController : MonoBehaviour {
 
                     foreach (var cell in SelectedCell.Units.MovementPath) {
                         if (cell != null)
-                            MoveFieldTilemap.SetTile(cell.CellPos, Settings.MvUnitFieldTile);
+                            MoveFieldTilemap.SetTile(cell, Settings.MvUnitFieldTile);
                     }
                 }
                 else {
@@ -179,40 +182,30 @@ public class GameController : MonoBehaviour {
         ActionsPanel.GetComponent<UnitsActionScript>().CloseMenu();
         ClearMoveFieldTilemap();
 
-        PlayerStep++;
+        Settings.Game.PlayerStep++;
 
-        if (PlayerStep > Players.Count - 1) {
-            Steps++;
-            PlayerStep = 0;
+        if (Settings.Game.PlayerStep > Settings.Game.Players.Count - 1) {
+            Settings.Game.Steps++;
+            Settings.Game.PlayerStep = 0;
 
-            Dictionary<Vector3Int, Cell> TempWorld = new Dictionary<Vector3Int, Cell>(World);
-            foreach (var pl in Players) {
+            foreach (var pl in Settings.Game.Players) {
 
                 List<Cell> PlayerCells = new List<Cell>();
                 List<Unit> PlayerUnits = new List<Unit>();
-                for (int x = bounds.xMin; x <= bounds.xMax; x++) {
-                    for (int y = bounds.yMin; y <= bounds.yMax; y++) {
-                        Vector3Int pos = new Vector3Int(x, y, 0);
-
-                        if (TempWorld.ContainsKey(pos)) {
-                            Cell cell = TempWorld[pos];
-
-                            if (cell.Units != null) {
-                                if (cell.Units.Owner == pl) {
-                                    PlayerUnits.Add(cell.Units);
-                                }
-                            }
-
-                            if (cell.Owner == pl) {
-                                PlayerCells.Add(cell);
-                                TempWorld.Remove(pos);
-                            }
+                foreach (var cell in Settings.Game.World) {
+                    if (cell.Value.Units != null) {
+                        if (cell.Value.Units.Owner.ID == pl.ID) {
+                            PlayerUnits.Add(cell.Value.Units);
                         }
+                    }
+
+                    if (cell.Value.Owner != null && cell.Value.Owner.ID == pl.ID) {
+                        PlayerCells.Add(cell.Value);
                     }
                 }
                 pl.MakeStep(PlayerCells, PlayerUnits);
             }
         }
     }
-
 }
+
