@@ -9,6 +9,8 @@ public class MenuController : MonoBehaviour
 {
     public static MenuController Instance;
 
+    public Settings Settings;
+
     public List<GameObject> MenuPanels;
     [HideInInspector]
     public string[] Maps;

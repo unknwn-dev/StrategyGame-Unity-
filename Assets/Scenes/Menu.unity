@@ -778,6 +778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5a57d0702fb3794aad5fb62a3218864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 5a79ae0af19203a42a871b5a451b5dd3, type: 2}
   MenuPanels:
   - {fileID: 2005931674}
   - {fileID: 777519378}

@@ -9,16 +9,16 @@ public class SaveSelectorController : MonoBehaviour
 
         gameObject.GetComponent<TMP_Dropdown>().options = new List<TMP_Dropdown.OptionData>();
 
-        if (!Directory.Exists(Settings.Instance.SaveFolder)) {
-            Directory.CreateDirectory(Settings.Instance.SaveFolder);
+        if (!Directory.Exists(MenuController.Instance.Settings.SaveFolder)) {
+            Directory.CreateDirectory(MenuController.Instance.Settings.SaveFolder);
         }
 
-        Settings.Instance.Saves = Directory.GetFiles(Settings.Instance.SaveFolder, "*.gmsv");
+        MenuController.Instance.Settings.Saves = Directory.GetFiles(MenuController.Instance.Settings.SaveFolder, "*.gmsv");
 
         List<TMP_Dropdown.OptionData> dropDData = new List<TMP_Dropdown.OptionData>();
 
-        for (int i = 0; i < Settings.Instance.Saves.Length; i++) {
-            dropDData.Add(new TMP_Dropdown.OptionData(Settings.Instance.Saves[i].Replace(Application.dataPath + "/Saves\\", "").Replace(".gmsv", "")));
+        for (int i = 0; i < MenuController.Instance.Settings.Saves.Length; i++) {
+            dropDData.Add(new TMP_Dropdown.OptionData(MenuController.Instance.Settings.Saves[i].Replace(Application.dataPath + "/Saves\\", "").Replace(".gmsv", "")));
         }
 
         if (dropDData != null)
