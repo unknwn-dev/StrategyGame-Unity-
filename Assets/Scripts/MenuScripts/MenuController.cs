@@ -3,11 +3,23 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.IO;
-using System.Collections;
+using System;
+
+public enum MenuPanel
+{
+    MainMenu,
+    NewGame,
+    LoadGame,
+    MapEditor,
+    Settings,
+    Exit
+}
 
 public class MenuController : MonoBehaviour
 {
     public static MenuController Instance;
+
+    public static Action<MenuPanel> OpenMenu;
 
     public Settings Settings;
 
