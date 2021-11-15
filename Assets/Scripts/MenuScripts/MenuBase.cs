@@ -13,13 +13,24 @@ public class MenuBase : MonoBehaviour
 
     public void OnOpen(MenuPanel menu)
     {
-        if(menu == Panel)
+        if (menu == Panel && !gameObject.activeInHierarchy)
         {
             gameObject.SetActive(true);
         }
-        else
+        else if(menu != Panel && gameObject.activeInHierarchy)
         {
             gameObject.SetActive(false);
         }
     }
+}
+
+
+[System.Serializable]
+public enum MenuPanel
+{
+    MainMenu,
+    NewGame,
+    LoadGame,
+    MapEditor,
+    Settings
 }

@@ -1,19 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
-using System.IO;
 using System;
-
-public enum MenuPanel
-{
-    MainMenu,
-    NewGame,
-    LoadGame,
-    MapEditor,
-    Settings,
-    Exit
-}
+using System.Collections;
 
 public class MenuController : MonoBehaviour
 {
@@ -30,12 +19,8 @@ public class MenuController : MonoBehaviour
     public int SelectedMap;
     public int SelectedSave;
     public static int PlayersCount = 4;
-
-    private int CurrentMenu = 0;
-    [SerializeField]
-    private GameObject NameField;
-    [SerializeField]
-    private TMP_InputField NewMapName;
+    public GameObject NameField;
+    public TMP_InputField NewMapName;
 
     private void Start() {
         if (Instance == null)
@@ -43,12 +28,18 @@ public class MenuController : MonoBehaviour
         else if (Instance != this) {
             Destroy(gameObject);
         }
+
+        StartCoroutine(LateStart(0.1f));
     }
 
-    public void CallMenuElement(int num) {
-        CurrentMenu = num;
-        MenuPanels[0].SetActive(false);
-        MenuPanels[num].SetActive(true);
+    IEnumerator LateStart(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        OpenMenu.Invoke(MenuPanel.MainMenu);
+    }
+
+    public void CallMenuElement(int menu) {
+        OpenMenu.Invoke((MenuPanel)menu);
     }
 
     public void OnSelectMap(int num) {
@@ -59,38 +50,12 @@ public class MenuController : MonoBehaviour
         SelectedSave = num;
     }
 
-    public void OnLoadGame() {
-        Settings.Game.SaveName = Settings.Instance.Saves[SelectedSave].Replace(Application.dataPath + "/Saves\\", "").Replace(".gmsv", "");
-        SceneManager.LoadScene("MainScene");
-    }
-
     public void SetPlayersCount(int num) {
         PlayersCount = num+2;
     }
 
     public void ReturnToMenu() {
-        MenuPanels[0].SetActive(true);
-        MenuPanels[CurrentMenu].SetActive(false);
-    }
-
-    public void Play() {
-        Settings.Game = new Game();
-        SceneManager.LoadScene("MainScene");
-    }
-
-    public void NewMap() {
-        NameField.SetActive(true);
-    }
-
-    public void CreateMap() {
-
-        string mapPath = Settings.Instance.MapsFolder + "/" + NewMapName.text + ".gmps";
-
-        if (!File.Exists(mapPath)){
-            File.CreateText(mapPath);
-            NameField.SetActive(false);
-        }
-
+        OpenMenu.Invoke(MenuPanel.MainMenu);
     }
 
     public void ExitGame()
