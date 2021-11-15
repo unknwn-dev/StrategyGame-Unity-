@@ -20,6 +20,11 @@ public class MenuBase : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+    private void OnDestroy()
+    {
+        MenuController.OpenMenu -= OnOpen;
+    }
 }
 
 

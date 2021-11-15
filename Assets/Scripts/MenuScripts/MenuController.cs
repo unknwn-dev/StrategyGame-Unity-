@@ -28,13 +28,16 @@ public class MenuController : MonoBehaviour
         else if (Instance != this) {
             Destroy(gameObject);
         }
-
-        StartCoroutine(LateStart(0.1f));
+        StartCoroutine(waitForMenusInit());
     }
 
-    IEnumerator LateStart(float waitTime)
+    IEnumerator waitForMenusInit()
     {
-        yield return new WaitForSeconds(waitTime);
+        while(OpenMenu == null || OpenMenu.GetInvocationList().Length < Enum.GetNames(typeof(MenuPanel)).Length)
+        {
+            yield return null;
+        }
+
         OpenMenu.Invoke(MenuPanel.MainMenu);
     }
 
