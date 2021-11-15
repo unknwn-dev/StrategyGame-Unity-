@@ -42,6 +42,11 @@ public class MenuController : MonoBehaviour
         OpenMenu.Invoke((MenuPanel)menu);
     }
 
+    public void CallMenuElementEnum(MenuPanel menu)
+    {
+        OpenMenu.Invoke((MenuPanel)menu);
+    }
+
     public void OnSelectMap(int num) {
         SelectedMap = num;
     }
