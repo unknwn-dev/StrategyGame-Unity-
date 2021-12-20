@@ -71,4 +71,9 @@ public class Settings : ScriptableObject
         MapsFolder = Application.dataPath + "/Maps";
         SaveFolder = Application.dataPath + "/Saves";
     }
+
+    private void LoadObjectParams()
+    {
+
+    }
 }
