@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+#if PLATFORM_ANDROID
+    using UnityEngine.Android;
+#endif
 
 [CreateAssetMenu(menuName = "GameSettings"), SerializeField]
 public class Settings : ScriptableObject
@@ -68,12 +71,16 @@ public class Settings : ScriptableObject
         else if (Instance != this) {
             Destroy(this);
         }
+#if UNITY_EDITOR_WIN
         MapsFolder = Application.dataPath + "/Maps";
         SaveFolder = Application.dataPath + "/Saves";
-    }
-
-    private void LoadObjectParams()
-    {
+#elif PLATFORM_ANDROID
+        if (!Permission.HasUserAuthorizedPermission(Permission.Microphone)){
+            Permission.RequestUserPermission(Permission.Microphone);
+        }
+        MapsFolder = Application.persistentDataPath + "/Maps";
+        SaveFolder = Application.persistentDataPath + "/Saves";
+#endif
 
     }
 }

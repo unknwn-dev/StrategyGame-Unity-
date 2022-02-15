@@ -30,6 +30,20 @@ public class Player
         foreach (var unit in PlayerUnits)
         {
             unit.MoveThroughtPath();
+
+            Money += (int)unit.CurrentCell.Rec.Income;
+
+            if(Money <= 0)
+            {
+                unit.Patience -= 1;
+            }
+
+            if(unit.Patience <= 0)
+            {
+                unit.CurrentCell.Units = null;
+                unit.CurrentCell.UpdateOwn();
+            }
+
             if(PlayerCells.Count > 0)
                 Money -= unit.MaintenanceCost;
             unit.MPToMax();

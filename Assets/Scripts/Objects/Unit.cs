@@ -21,6 +21,7 @@ public class Unit {
     public int MaintenanceCost;
     public int MovePoints;
     public int BuyCost;
+    public int Patience;
     public List<Vector3Int> MovementPath = new List<Vector3Int>();
     public Cell CurrentCell;
 
@@ -34,6 +35,7 @@ public class Unit {
         UnitTile.sprite = sett.UnitTypes[(int)type].UnitTile.sprite;
         MaintenanceCost = sett.UnitTypes[(int)type].MaintenanceCost;
         MovePoints = sett.UnitTypes[(int)type].MovePoints;
+        Patience = sett.UnitTypes[(int)type].Patience;
 
         Color UnitColor = new Color();
         UnitColor.r = Owner.PlayerColor.r - 0.2f;

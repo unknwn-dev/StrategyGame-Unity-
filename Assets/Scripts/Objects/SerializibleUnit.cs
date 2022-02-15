@@ -12,6 +12,7 @@ public class SerializibleUnit
     public int MaintenanceCost;
     public int MovePoints;
     public int BuyCost;
+    public int Patience;
     public List<SerializibleV3Int> MovementPath = new List<SerializibleV3Int>();
     public SerializibleV3Int CurrentCell;
 
@@ -23,6 +24,7 @@ public class SerializibleUnit
         MaintenanceCost = unit.MaintenanceCost;
         MovePoints = unit.MovePoints;
         BuyCost = unit.BuyCost;
+        Patience = unit.Patience;
         CurrentCell = new SerializibleV3Int(unit.CurrentCell.CellPos);
         foreach(var pos in unit.MovementPath) {
             MovementPath.Add(new SerializibleV3Int(pos));
@@ -37,6 +39,7 @@ public class SerializibleUnit
         unit.MaintenanceCost = MaintenanceCost;
         unit.MovePoints = MovePoints;
         unit.BuyCost = BuyCost;
+        unit.Patience = Patience;
 
         foreach (var p in players) {
             if (p.ID == OwnerID) {

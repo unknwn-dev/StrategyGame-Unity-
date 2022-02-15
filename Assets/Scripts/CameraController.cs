@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -7,12 +8,12 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (EventSystem.current.IsPointerOverGameObject())
         {
-            touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            return;
         }
 
-        if(Input.touchCount == 2)
+        if (Input.touchCount == 2)
         {
             Debug.Log("zoom");
 
@@ -27,9 +28,14 @@ public class CameraController : MonoBehaviour
 
             float diff = currMagn - prevMagn;
 
-            Zoom(diff * 0.001f);
+            Zoom(diff * 0.005f);
         }
-        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
+
         else if (Input.GetMouseButton(0))
         {
             transform.position += touchStart - Camera.main.ScreenToWorldPoint(Input.mousePosition);

@@ -38,7 +38,7 @@ public class PauseController : MonoBehaviour
     }
 
     public void LoadGame() {
-        Settings.Game.LoadGame(Settings.Instance.Saves[SelectedSave].Replace(Application.dataPath + "/Saves\\", "").Replace(".gmsv", ""));
+        Settings.Game.LoadGame(Settings.Instance.Saves[SelectedSave].Replace(MenuController.Instance.Settings.SaveFolder + "/", "").Replace(".gmsv", ""));
         OpenLoadSave();
     }
 

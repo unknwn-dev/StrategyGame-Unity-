@@ -76,7 +76,7 @@ public class UnitsActionScript : MonoBehaviour
             Button.GetComponentInChildren<TextMeshProUGUI>().SetText("Delete\nUnit");
         }
 
-        gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Units.Type}\nHP:{SelectedCell.Units.HP}  Dmg:{SelectedCell.Units.Damage}  MP:{SelectedCell.Units.MovePoints}  Mtnc cost:{SelectedCell.Units.MaintenanceCost}");
+        gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{SelectedCell.Units.Type}\nHP:{SelectedCell.Units.HP}  Dmg:{SelectedCell.Units.Damage}  MP:{SelectedCell.Units.MovePoints}  Mtnc cost:{SelectedCell.Units.MaintenanceCost} Patience:{SelectedCell.Units.Patience}");
 
         return Button;
     }

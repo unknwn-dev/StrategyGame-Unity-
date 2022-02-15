@@ -13,12 +13,12 @@ public class SaveSelectorController : MonoBehaviour
             Directory.CreateDirectory(MenuController.Instance.Settings.SaveFolder);
         }
 
-        MenuController.Instance.Settings.Saves = Directory.GetFiles(MenuController.Instance.Settings.SaveFolder, "*.gmsv");
+        MenuController.Instance.Settings.Saves = Directory.GetFiles(MenuController.Instance.Settings.SaveFolder + "/", "*.gmsv");
 
         List<TMP_Dropdown.OptionData> dropDData = new List<TMP_Dropdown.OptionData>();
 
         for (int i = 0; i < MenuController.Instance.Settings.Saves.Length; i++) {
-            dropDData.Add(new TMP_Dropdown.OptionData(MenuController.Instance.Settings.Saves[i].Replace(Application.dataPath + "/Saves\\", "").Replace(".gmsv", "")));
+            dropDData.Add(new TMP_Dropdown.OptionData(MenuController.Instance.Settings.Saves[i].Replace(MenuController.Instance.Settings.SaveFolder + "/", "").Replace(".gmsv", "")));
         }
 
         if (dropDData != null)

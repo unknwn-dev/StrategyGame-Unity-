@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.EventSystems;
+using TMPro;
 
 public class GameController : MonoBehaviour {
     public static GameController Instance;
@@ -15,6 +17,7 @@ public class GameController : MonoBehaviour {
     public GameObject PlayerColor;
     public GameObject Money;
     public GameObject ActionsPanel;
+    public GameObject GameOverPanel;
     public bool IsCanMove;
 
     public Cell SelectedCell;
@@ -96,7 +99,12 @@ public class GameController : MonoBehaviour {
     private void MoveUnit() {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0) && !ShopScript.Instance.IsBuying && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0) && !ShopScript.Instance.IsBuying) {
             Vector3Int ClickedCellPos = GroundTilemap.WorldToCell(mousePos);
             ClickedCellPos.z = 0;
 
@@ -178,11 +186,19 @@ public class GameController : MonoBehaviour {
 
         Settings.Game.PlayerStep++;
 
+        Animator GOPAnimator = GameOverPanel.GetComponent<Animator>();
+        if (GOPAnimator.GetBool("Out") == true)
+        {
+            GOPAnimator.SetBool("Out", false);
+        }
+
         if (Settings.Game.PlayerStep > Settings.Game.Players.Count - 1) {
+            List<Player> players = new List<Player>(Settings.Game.Players);
             Settings.Game.Steps++;
             Settings.Game.PlayerStep = 0;
 
-            foreach (var pl in Settings.Game.Players) {
+
+            foreach (var pl in players) {
 
                 List<Cell> PlayerCells = new List<Cell>();
                 List<Unit> PlayerUnits = new List<Unit>();
@@ -196,6 +212,12 @@ public class GameController : MonoBehaviour {
                     if (cell.Value.Owner != null && cell.Value.Owner.ID == pl.ID) {
                         PlayerCells.Add(cell.Value);
                     }
+                }
+                if(PlayerCells.Count == 0 && PlayerUnits.Count == 0)
+                {
+                    Settings.Game.Players.Remove(pl);
+                    GameOverPanel.GetComponentInChildren<TMP_Text>().text = pl.PlayerName + " is lose";
+                    GOPAnimator.SetBool("Out", true);
                 }
                 pl.MakeStep(PlayerCells, PlayerUnits);
             }

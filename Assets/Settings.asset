@@ -47,25 +47,28 @@ MonoBehaviour:
     Type: 0
     HP: 10
     Damage: 5
-    MaintenanceCost: 20
+    MaintenanceCost: 5
     MovePoints: 2
     BuyCost: 50
+    Patience: 20
     MovementPath: []
   - UnitTile: {fileID: 11400000, guid: 6a75132d8826f6242b2b4df8691cd624, type: 2}
     Type: 1
     HP: 50
     Damage: 20
-    MaintenanceCost: 50
+    MaintenanceCost: 20
     MovePoints: 2
     BuyCost: 200
+    Patience: 10
     MovementPath: []
   - UnitTile: {fileID: 11400000, guid: 5e933448efa57a64783fe08f2aa7d459, type: 2}
     Type: 2
     HP: 10
     Damage: 0
-    MaintenanceCost: 60
+    MaintenanceCost: 10
     MovePoints: 2
     BuyCost: 500
+    Patience: 30
     MovementPath: []
   TerritoryHPBonus: 5
   CastleHP: 400
